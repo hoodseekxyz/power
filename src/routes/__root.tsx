@@ -14,9 +14,9 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Desk toy of the Jacobian lens. The tape draws the face. $JLENS · LONG × ANTHROPICx1L. Not affiliated with Anthropic.",
+          "A wallet is a token in J-space. The lens reads it. Click the nose. $JLENS · LONG × ANTHROPICx1L. Not affiliated with Anthropic.",
       },
-      { name: "theme-color", content: "#f2eee6" },
+      { name: "theme-color", content: "#ffffff" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
