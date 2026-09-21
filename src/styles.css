@@ -9,6 +9,9 @@
   --color-faint: #b7b0a6;
   --color-line: #d9d0c4;
   --color-ws: #2f6f68;
+  --color-pin: #c73e8a;
+  --color-hot: #f2d45c;
+  --color-heat: #1a3358;
   --color-warn: #8a3d2f;
   --font-display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;

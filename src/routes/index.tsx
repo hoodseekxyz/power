@@ -1,8 +1,6 @@
 import { ActionPad } from "@/components/action-pad";
 import { Footer, Header } from "@/components/chrome";
-import { DeskSide } from "@/components/desk-side";
-import { FaceStage } from "@/components/face-stage";
-import { SliceGrid } from "@/components/slice-grid";
+import { PaperVis } from "@/components/paper-vis";
 import { FACE_TOKS, LAYERS } from "@/lib/jlens";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -18,7 +16,6 @@ function Home() {
   const setFocus = useDesk((s) => s.setFocus);
   const select = useDesk((s) => s.select);
   const hydrate = useDesk((s) => s.hydrate);
-  const scope = useDesk((s) => s.scope);
   const selected = useDesk((s) => s.selected);
 
   useEffect(() => {
@@ -37,10 +34,10 @@ function Home() {
       else if (e.key === "x" || e.key === "X") swap();
       else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setFocus(Math.max(0, selected.layer - 1));
+        setFocus(Math.min(LAYERS - 1, selected.layer + 1));
       } else if (e.key === "ArrowDown") {
         e.preventDefault();
-        setFocus(Math.min(LAYERS - 1, selected.layer + 1));
+        setFocus(Math.max(0, selected.layer - 1));
       } else if (e.key === "ArrowLeft") {
         e.preventDefault();
         const p = Math.max(0, selected.pos - 1);
@@ -58,12 +55,9 @@ function Home() {
   }, [ping, spark, fit, swap, setFocus, select, selected]);
 
   return (
-    <div className="paper-grain flex h-dvh flex-col text-ink">
+    <div className="paper-grain flex h-dvh flex-col overflow-hidden text-ink">
       <Header />
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        {scope === "slice" ? <SliceGrid /> : <FaceStage />}
-        <DeskSide />
-      </div>
+      <PaperVis />
       <div className="shrink-0 border-t border-line bg-surface p-2 lg:hidden">
         <ActionPad compact />
       </div>

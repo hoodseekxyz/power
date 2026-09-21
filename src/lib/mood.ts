@@ -21,7 +21,9 @@ export type Mood = {
   glow: boolean;
 };
 
-export const VISUAL_POS = FACE_TOKS.map((t, i) => (t.line >= 0 ? i : -1)).filter((i) => i >= 0);
+export const VISUAL_POS = FACE_TOKS.map((t, i) => (!t.ws && t.role !== "ask" ? i : -1)).filter(
+  (i) => i >= 0,
+);
 
 export function sitPos(seed: string) {
   return VISUAL_POS[hash32(seed) % VISUAL_POS.length]!;

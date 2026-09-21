@@ -2,7 +2,8 @@ import { create } from "zustand";
 import {
   FACE_TOKS,
   LAYERS,
-  NOSE_I,
+  NOSE_LAYER,
+  NOSE_POS,
   YOU_WORDS,
   youWord,
   type TapeEvent,
@@ -27,6 +28,7 @@ type Desk = {
   focusLayer: number;
   scope: Scope;
   glow: number;
+  hideWs: boolean;
   events: TapeEvent[];
   sitters: Sitter[];
   tape: Tape;
@@ -39,6 +41,7 @@ type Desk = {
   select: (layer: number, pos: number, word: string) => void;
   setFocus: (layer: number) => void;
   setScope: (scope: Scope) => void;
+  setHideWs: (v: boolean) => void;
   ping: () => void;
   spark: () => void;
   fit: () => void;
@@ -111,12 +114,13 @@ export const useDesk = create<Desk>((set, get) => ({
   fittedTo: LAYERS - 1,
   fitting: false,
   sending: null,
-  selected: { layer: 7, pos: NOSE_I },
+  selected: { layer: NOSE_LAYER, pos: NOSE_POS },
   pinned: "nose",
   injected: null,
-  focusLayer: 7,
-  scope: "specimen",
+  focusLayer: NOSE_LAYER,
+  scope: "slice",
   glow: 0,
+  hideWs: true,
   events: [
     {
       id: "g0",
@@ -224,6 +228,7 @@ export const useDesk = create<Desk>((set, get) => ({
     set({ focusLayer: layer, selected: { layer, pos } });
   },
   setScope: (scope) => set({ scope }),
+  setHideWs: (hideWs) => set({ hideWs }),
   ping: () => {
     sitLocal(set, get, "ping", 0.7, 1);
     if (!LIVE_PLANE) return;
@@ -272,7 +277,7 @@ export const useDesk = create<Desk>((set, get) => ({
     let layer = 0;
     let last = 0;
     const tick = (t: number) => {
-      if (t - last < 72 && layer > 0) {
+      if (t - last < 28 && layer > 0) {
         fitRaf = requestAnimationFrame(tick);
         return;
       }
@@ -281,7 +286,7 @@ export const useDesk = create<Desk>((set, get) => ({
       layer += 1;
       if (layer < LAYERS) fitRaf = requestAnimationFrame(tick);
       else {
-        set({ fitting: false, focusLayer: 7, selected: { ...get().selected, layer: 7 } });
+        set({ fitting: false, focusLayer: 42, selected: { ...get().selected, layer: 42 } });
       }
     };
     fitRaf = requestAnimationFrame(tick);
