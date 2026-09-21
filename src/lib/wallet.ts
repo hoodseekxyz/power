@@ -13,6 +13,12 @@ type Announce = {
   provider: Provider;
 };
 
+export const SEL = {
+  ping: "0x5c36b186",
+  spark: "0xcb7d8ef2",
+  fit: "0xc8e13bb4",
+} as const;
+
 function injected(): Provider | null {
   if (typeof window === "undefined") return null;
   const w = window as unknown as { ethereum?: Provider };
@@ -50,6 +56,26 @@ export async function connect(): Promise<Hex> {
   return addr as Hex;
 }
 
+export async function sendCall(to: string, data: string, valueWei = "0"): Promise<Hex> {
+  const eth = await resolveProvider();
+  await ensureChain(eth);
+  const accs = (await eth.request({ method: "eth_requestAccounts" })) as string[];
+  const from = accs[0];
+  if (!from) throw new Error("No account");
+  const hash = (await eth.request({
+    method: "eth_sendTransaction",
+    params: [
+      {
+        from,
+        to,
+        data,
+        value: "0x" + BigInt(valueWei).toString(16),
+      },
+    ],
+  })) as string;
+  return hash as Hex;
+}
+
 async function ensureChain(eth: Provider) {
   const id = (await eth.request({ method: "eth_chainId" })) as string;
   const want = "0x" + SITE.chainId.toString(16);
@@ -77,4 +103,8 @@ async function ensureChain(eth: Provider) {
 
 export function shortAddr(a: string) {
   return `${a.slice(0, 6)}…${a.slice(-4)}`;
+}
+
+export function shortTx(h: string) {
+  return `${h.slice(0, 6)}…${h.slice(-4)}`;
 }

@@ -8,8 +8,11 @@ import {
   type TapeEvent,
 } from "@/lib/jlens";
 import { moodFrom, sitPos, VISUAL_POS, type Mood, type Sitter, type Tape } from "@/lib/mood";
+import { LIVE_PLANE, SITE } from "@/lib/site";
+import { SEL, connect as walletConnect, sendCall, shortTx } from "@/lib/wallet";
 
 export type Scope = "specimen" | "slice";
+export type Sending = null | "ping" | "spark" | "fit";
 
 type Desk = {
   account: string | null;
@@ -17,6 +20,7 @@ type Desk = {
   guest: boolean;
   fittedTo: number;
   fitting: boolean;
+  sending: Sending;
   selected: { layer: number; pos: number };
   pinned: string;
   injected: { pos: number; word: string } | null;
@@ -73,12 +77,40 @@ function upsertSitter(list: Sitter[], next: Sitter): Sitter[] {
   return copy;
 }
 
+function sitLocal(
+  set: (fn: (s: Desk) => Partial<Desk>) => void,
+  get: () => Desk,
+  kind: "ping" | "spark",
+  weight: number,
+  buyN: number,
+) {
+  const { you, selected, account } = get();
+  const pos = selected.pos;
+  set((s) => ({
+    injected: { pos, word: you },
+    err: null,
+    glow: Date.now(),
+    tape: { buy: s.tape.buy + buyN, sell: s.tape.sell },
+    lastTick: { side: "buy", word: you, t: Date.now() },
+    sitters: upsertSitter(s.sitters, {
+      id: account?.toLowerCase() ?? `you-${you}`,
+      word: you,
+      pos,
+      weight,
+      you: true,
+    }),
+  }));
+  const extra = kind === "spark" ? (LIVE_PLANE ? " + 0.0001 ETH" : " + 0.0001 ETH (plane pending)") : "";
+  get().note(kind, `${you} at ${FACE_TOKS[pos]?.t ?? pos}${extra}`);
+}
+
 export const useDesk = create<Desk>((set, get) => ({
   account: null,
   you: "holder",
   guest: true,
   fittedTo: LAYERS - 1,
   fitting: false,
+  sending: null,
   selected: { layer: 7, pos: NOSE_I },
   pinned: "nose",
   injected: null,
@@ -136,13 +168,13 @@ export const useDesk = create<Desk>((set, get) => ({
               .map((x) => (x.id === victim.id ? { ...x, weight: x.weight * 0.55 } : x))
               .filter((x) => x.you || x.weight > 0.18);
           }
-            const ev: TapeEvent = {
-              id: `e${++nid}`,
-              kind: buy ? "buy" : "sell",
-              label: `${buy ? "buy" : "sell"} · ${word} · ${FACE_TOKS[pos]?.t ?? pos}`,
-              t: Date.now(),
-            };
-            return {
+          const ev: TapeEvent = {
+            id: `e${++nid}`,
+            kind: buy ? "buy" : "sell",
+            label: `${buy ? "buy" : "sell"} · ${word} · ${FACE_TOKS[pos]?.t ?? pos}`,
+            t: Date.now(),
+          };
+          return {
             sitters,
             tape: {
               buy: s.tape.buy + (buy ? 1 : 0),
@@ -193,42 +225,44 @@ export const useDesk = create<Desk>((set, get) => ({
   },
   setScope: (scope) => set({ scope }),
   ping: () => {
-    const { you, selected, account } = get();
-    const pos = selected.pos;
-    set((s) => ({
-      injected: { pos, word: you },
-      err: null,
-      glow: Date.now(),
-      tape: { buy: s.tape.buy + 1, sell: s.tape.sell },
-      lastTick: { side: "buy", word: you, t: Date.now() },
-      sitters: upsertSitter(s.sitters, {
-        id: account?.toLowerCase() ?? `you-${you}`,
-        word: you,
-        pos,
-        weight: 0.7,
-        you: true,
-      }),
-    }));
-    get().note("ping", `${you} at ${FACE_TOKS[pos]?.t ?? pos}`);
+    sitLocal(set, get, "ping", 0.7, 1);
+    if (!LIVE_PLANE) return;
+    void (async () => {
+      set({ sending: "ping" });
+      try {
+        let addr = get().account;
+        if (!addr) {
+          addr = await walletConnect();
+          get().connect(addr);
+        }
+        const h = await sendCall(SITE.planeCa, SEL.ping);
+        get().note("ping", `tx ${shortTx(h)}`);
+      } catch (e) {
+        set({ err: e instanceof Error ? e.message : "ping failed" });
+      } finally {
+        set({ sending: null });
+      }
+    })();
   },
   spark: () => {
-    const { you, selected, account } = get();
-    const pos = selected.pos;
-    set((s) => ({
-      injected: { pos, word: you },
-      err: null,
-      glow: Date.now(),
-      tape: { buy: s.tape.buy + 2, sell: s.tape.sell },
-      lastTick: { side: "buy", word: you, t: Date.now() },
-      sitters: upsertSitter(s.sitters, {
-        id: account?.toLowerCase() ?? `you-${you}`,
-        word: you,
-        pos,
-        weight: 1.2,
-        you: true,
-      }),
-    }));
-    get().note("spark", `${you} + 0.0001 ETH (plane pending)`);
+    sitLocal(set, get, "spark", 1.2, 2);
+    if (!LIVE_PLANE) return;
+    void (async () => {
+      set({ sending: "spark" });
+      try {
+        let addr = get().account;
+        if (!addr) {
+          addr = await walletConnect();
+          get().connect(addr);
+        }
+        const h = await sendCall(SITE.planeCa, SEL.spark, SITE.sparkWei);
+        get().note("spark", `tx ${shortTx(h)}`);
+      } catch (e) {
+        set({ err: e instanceof Error ? e.message : "spark failed" });
+      } finally {
+        set({ sending: null });
+      }
+    })();
   },
   fit: () => {
     if (get().fitting) return;
@@ -251,6 +285,18 @@ export const useDesk = create<Desk>((set, get) => ({
       }
     };
     fitRaf = requestAnimationFrame(tick);
+    if (!LIVE_PLANE || !get().account) return;
+    void (async () => {
+      set({ sending: "fit" });
+      try {
+        const h = await sendCall(SITE.planeCa, SEL.fit);
+        get().note("fit", `tx ${shortTx(h)}`);
+      } catch (e) {
+        set({ err: e instanceof Error ? e.message : "fit failed" });
+      } finally {
+        set({ sending: null });
+      }
+    })();
   },
   swap: () => {
     const { pinned, selected } = get();

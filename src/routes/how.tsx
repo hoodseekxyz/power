@@ -54,6 +54,13 @@ J_l = E[∂h_final / ∂h_l]`}
             <span className="text-ws">slice</span> — unfold the whole residual. Every prompt token
             × every layer.
           </li>
+          <li>
+            Overlay last. Remix on chain {SITE.chainId}: deploy{" "}
+            <span className="text-ink">JLensWorkspace.sol</span> (0.8.24, optimizer 200, Cancun).
+            Write <span className="text-ws">unfold</span> once. Paste the plane CA. Then LONG mints
+            ${SITE.ticker} — paste the token CA, owner <span className="text-ws">bindToken</span>{" "}
+            once. Never put the plane CA in the LONG form.
+          </li>
         </ul>
         <p className="mt-8 max-w-prose text-pretty text-sm leading-relaxed text-mute">
           Keys: space ping · j fit · s spark · x swap · arrows walk layers and tokens. Chain{" "}
