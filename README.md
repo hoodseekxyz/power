@@ -11,6 +11,8 @@ The paper’s treasure is a pair:
 
 The specimen is the paper’s ASCII face. Selecting `^` (pos 28) at layer 42 reads **nose**.
 
+**Launch / next session:** [LAUNCH.md](./LAUNCH.md)
+
 ## The pair on Robinhood 4663
 
 One factory tx deploys both children.
