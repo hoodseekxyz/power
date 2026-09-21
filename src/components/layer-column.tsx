@@ -2,6 +2,16 @@ import { cn } from "@/lib/cn";
 import { FACE_TOKS, LAYERS, OUTPUT_LAYER, inWorkspace, readout } from "@/lib/jlens";
 import { useDesk } from "@/store/desk";
 
+const WINDOW = 16;
+
+function windowed(focus: number) {
+  const hi = Math.min(LAYERS - 1, Math.max(WINDOW - 1, focus + Math.floor(WINDOW / 2)));
+  const lo = Math.max(0, hi - WINDOW + 1);
+  const rows: number[] = [];
+  for (let l = hi; l >= lo; l--) rows.push(l);
+  return rows;
+}
+
 export function LayerColumn() {
   const pos = useDesk((s) => s.selected.pos);
   const focusLayer = useDesk((s) => s.focusLayer);
@@ -10,6 +20,7 @@ export function LayerColumn() {
   const you = useDesk((s) => s.you);
   const setFocus = useDesk((s) => s.setFocus);
   const tok = FACE_TOKS[pos];
+  const rows = windowed(focusLayer);
 
   return (
     <div className="hidden lg:block">
@@ -18,7 +29,7 @@ export function LayerColumn() {
         <span className="font-mono text-micro text-mute">{tok?.t}</span>
       </div>
       <ol className="flex flex-col">
-        {Array.from({ length: LAYERS }, (_, layer) => {
+        {rows.map((layer) => {
           const shown = fittedTo >= layer;
           const cell = readout(layer, pos, injected);
           const ws = inWorkspace(layer);
@@ -61,10 +72,11 @@ export function LayerStrip() {
   const fittedTo = useDesk((s) => s.fittedTo);
   const injected = useDesk((s) => s.injected);
   const setFocus = useDesk((s) => s.setFocus);
+  const rows = windowed(focusLayer).reverse();
 
   return (
     <ol className="flex w-full gap-1 overflow-x-auto pb-1 lg:hidden">
-      {Array.from({ length: LAYERS }, (_, layer) => {
+      {rows.map((layer) => {
         const shown = fittedTo >= layer;
         const cell = readout(layer, pos, injected);
         const ws = inWorkspace(layer);

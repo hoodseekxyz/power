@@ -2,42 +2,34 @@ import { FACE_TOKS, NOSE_I, type Role } from "@/lib/jlens";
 import { lerp, roleInk, type Mood, type Sitter } from "@/lib/mood";
 import { useEffect, useRef } from "react";
 
-/** Paper-faithful landmarks for the ASCII face, in viewBox 0 0 200 250. */
+/** Landmarks matching ornek.png, keyed to FACE_TOKS (pos 28 = ^). */
 export const ANCHOR: { x: number; y: number; pos: number }[] = [
-  { pos: 0, x: 100, y: 26 },
-  { pos: 1, x: 58, y: 46 },
-  { pos: 2, x: 142, y: 46 },
-  { pos: 3, x: 42, y: 70 },
-  { pos: 4, x: 70, y: 68 },
-  { pos: 5, x: 130, y: 68 },
-  { pos: 6, x: 158, y: 70 },
-  { pos: 7, x: 32, y: 100 },
-  { pos: 8, x: 70, y: 98 },
-  { pos: 9, x: 130, y: 98 },
-  { pos: 10, x: 168, y: 100 },
-  { pos: 11, x: 36, y: 130 },
-  { pos: 12, x: 100, y: 122 },
-  { pos: 13, x: 164, y: 130 },
-  { pos: 14, x: 100, y: 160 },
-  { pos: 15, x: 56, y: 186 },
-  { pos: 16, x: 144, y: 186 },
-  { pos: 17, x: 100, y: 204 },
-  { pos: 18, x: 86, y: 226 },
-  { pos: 19, x: 114, y: 226 },
+  { pos: 5, x: 100, y: 20 },
+  { pos: 5, x: 68, y: 38 },
+  { pos: 15, x: 132, y: 38 },
+  { pos: 9, x: 48, y: 64 },
+  { pos: 16, x: 152, y: 64 },
+  { pos: 12, x: 70, y: 72 },
+  { pos: 13, x: 130, y: 72 },
+  { pos: 18, x: 30, y: 104 },
+  { pos: 23, x: 170, y: 104 },
+  { pos: 20, x: 68, y: 104 },
+  { pos: 22, x: 132, y: 104 },
+  { pos: 28, x: 100, y: 132 },
+  { pos: 26, x: 28, y: 140 },
+  { pos: 30, x: 172, y: 140 },
+  { pos: 34, x: 30, y: 172 },
+  { pos: 36, x: 170, y: 172 },
+  { pos: 37, x: 54, y: 198 },
+  { pos: 40, x: 146, y: 198 },
+  { pos: 39, x: 100, y: 188 },
+  { pos: 32, x: 86, y: 256 },
+  { pos: 33, x: 114, y: 256 },
 ];
 
-const EGG =
-  "M100 22 C148 22 170 68 170 118 C170 168 138 204 100 204 C62 204 30 168 30 118 C30 68 52 22 100 22";
-
-function mouthD(smile: number) {
-  const y = 160;
-  const drop = 20 * smile;
-  return `M 70 ${y - drop * 0.12} Q 100 ${y + drop} 130 ${y - drop * 0.12}`;
-}
-
-function browD(cx: number, cy: number, alert: number) {
-  const lift = -7 * alert;
-  return `M ${cx - 11} ${cy + 3 + lift * 0.15} Q ${cx - 3} ${cy - 7 + lift} ${cx + 2} ${cy + 2 + lift * 0.25} T ${cx + 11} ${cy + 1 + lift * 0.1}`;
+function tilde(cx: number, cy: number, alert: number) {
+  const lift = -4 * alert;
+  return `M ${cx - 10} ${cy + lift} Q ${cx - 5} ${cy - 7 + lift} ${cx} ${cy + lift} T ${cx + 10} ${cy + lift}`;
 }
 
 export function LivingFaceSvg({
@@ -53,9 +45,11 @@ export function LivingFaceSvg({
   sitters: Sitter[];
   onPick: (pos: number) => void;
 }) {
-  const mouthRef = useRef<SVGPathElement>(null);
   const leftEyeRef = useRef<SVGEllipseElement>(null);
   const rightEyeRef = useRef<SVGEllipseElement>(null);
+  const smileL = useRef<SVGPathElement>(null);
+  const smileR = useRef<SVGPathElement>(null);
+  const smileBar = useRef<SVGPathElement>(null);
   const target = useRef(mood);
   target.current = mood;
 
@@ -69,9 +63,12 @@ export function LivingFaceSvg({
       const t = reduced ? 1 : 0.14;
       smile = lerp(smile, target.current.smile, t);
       open = lerp(open, target.current.open, t);
-      if (mouthRef.current) mouthRef.current.setAttribute("d", mouthD(smile));
-      const ry = blink ? 1.15 : 3.2 + 5.6 * open;
-      const rx = 4.2 + 4.4 * open;
+      const drop = 10 + 10 * smile;
+      if (smileL.current) smileL.current.setAttribute("d", `M 76 ${168} L 88 ${168 + drop}`);
+      if (smileR.current) smileR.current.setAttribute("d", `M 124 ${168} L 112 ${168 + drop}`);
+      if (smileBar.current) smileBar.current.setAttribute("d", `M 88 ${170 + drop} H 112`);
+      const ry = blink ? 1.2 : 7.6 + 2.4 * open;
+      const rx = 7.2 + 1.6 * open;
       for (const el of [leftEyeRef.current, rightEyeRef.current]) {
         if (!el) continue;
         el.setAttribute("rx", String(rx));
@@ -84,85 +81,81 @@ export function LivingFaceSvg({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blink]);
 
-  const inkOf = (role: Role) => 0.22 + 0.78 * roleInk(sitters, role);
+  const inkOf = (role: Role) => 0.72 + 0.28 * roleInk(sitters, role);
   const sel = ANCHOR.find((a) => a.pos === highlight) ?? ANCHOR.find((a) => a.pos === NOSE_I)!;
 
   return (
     <svg
-      viewBox="0 0 200 250"
-      className="h-auto w-full max-w-[16.5rem] sm:max-w-[24rem] lg:max-w-[28rem]"
+      viewBox="0 0 200 270"
+      className="h-auto w-full max-w-[17rem] sm:max-w-[24rem] lg:max-w-[26rem]"
       role="img"
       aria-label="ASCII face specimen. Click a part to read the lens."
     >
       <title>the specimen</title>
 
-      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-        <path
-          d={EGG}
-          strokeWidth="2.2"
-          strokeDasharray="8 13"
-          className="text-ink/45"
-        />
-        <path
-          d={EGG}
-          strokeWidth="2.35"
-          className="text-ink face-stroke"
-          style={{ opacity: mood.ink }}
-        />
-        <path d="M 86 210 V 238" strokeWidth="2.2" className="text-ink/70" style={{ opacity: 0.35 + 0.65 * inkOf("neck") }} />
-        <path d="M 114 210 V 238" strokeWidth="2.2" className="text-ink/70" style={{ opacity: 0.35 + 0.65 * inkOf("neck") }} />
-        <path
-          d={browD(70, 68, mood.alert)}
-          strokeWidth="2.3"
-          className="text-ink face-stroke"
-          style={{ opacity: inkOf("brow") }}
-        />
-        <path
-          d={browD(130, 68, mood.alert)}
-          strokeWidth="2.3"
-          className="text-ink face-stroke"
-          style={{ opacity: inkOf("brow") }}
-        />
-        <path
-          ref={mouthRef}
-          d={mouthD(mood.smile)}
-          strokeWidth="2.5"
-          className="text-ink face-stroke"
-          style={{ opacity: Math.max(0.35, inkOf("mouth")) }}
-        />
+      <g
+        fill="none"
+        stroke="var(--color-ink)"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.45"
+      >
+        <path d="M 78 20 H 122" style={{ opacity: inkOf("crown") }} />
+        <path d="M 62 46 L 74 32" style={{ opacity: inkOf("arc") }} />
+        <path d="M 126 32 L 138 46" style={{ opacity: inkOf("arc") }} />
+        <path d="M 42 74 L 54 56" style={{ opacity: inkOf("arc") }} />
+        <path d="M 146 56 L 158 74" style={{ opacity: inkOf("arc") }} />
+        <path d="M 38 86 Q 26 104 38 122" style={{ opacity: inkOf("cheek") }} />
+        <path d="M 162 86 Q 174 104 162 122" style={{ opacity: inkOf("cheek") }} />
+        <path d="M 28 130 V 150" style={{ opacity: inkOf("jaw") }} />
+        <path d="M 172 130 V 150" style={{ opacity: inkOf("jaw") }} />
+        <path d="M 30 162 V 182" style={{ opacity: inkOf("jaw") }} />
+        <path d="M 170 162 V 182" style={{ opacity: inkOf("jaw") }} />
+        <path d="M 46 202 L 60 184" style={{ opacity: inkOf("chin") }} />
+        <path d="M 140 184 L 154 202" style={{ opacity: inkOf("chin") }} />
+        <path d="M 62 224 L 78 238" style={{ opacity: inkOf("chin") }} />
+        <path d="M 122 238 L 138 224" style={{ opacity: inkOf("chin") }} />
+        <path d="M 78 240 H 122" style={{ opacity: inkOf("chin") }} />
+        <path d="M 86 248 V 266" style={{ opacity: inkOf("neck") }} />
+        <path d="M 114 248 V 266" style={{ opacity: inkOf("neck") }} />
+
+        <path d={tilde(70, 72, mood.alert)} style={{ opacity: inkOf("brow") }} />
+        <path d={tilde(130, 72, mood.alert)} style={{ opacity: inkOf("brow") }} />
+
+        <path ref={smileL} d="M 76 168 L 88 182" style={{ opacity: Math.max(0.7, inkOf("mouth")) }} />
+        <path ref={smileR} d="M 124 168 L 112 182" style={{ opacity: Math.max(0.7, inkOf("mouth")) }} />
+        <path ref={smileBar} d="M 88 184 H 112" style={{ opacity: Math.max(0.7, inkOf("mouth")) }} />
       </g>
 
       <ellipse
         ref={leftEyeRef}
-        cx="70"
-        cy="98"
-        rx="7.5"
-        ry="7.5"
+        cx="68"
+        cy="104"
+        rx="8.2"
+        ry="9"
         fill="none"
         stroke="var(--color-ink)"
-        strokeWidth="2.3"
-        style={{ opacity: Math.max(0.4, inkOf("eye")) }}
+        strokeWidth="2.45"
+        style={{ opacity: Math.max(0.75, inkOf("eye")) }}
       />
       <ellipse
         ref={rightEyeRef}
-        cx="130"
-        cy="98"
-        rx="7.5"
-        ry="7.5"
+        cx="132"
+        cy="104"
+        rx="8.2"
+        ry="9"
         fill="none"
         stroke="var(--color-ink)"
-        strokeWidth="2.3"
-        style={{ opacity: Math.max(0.4, inkOf("eye")) }}
+        strokeWidth="2.45"
+        style={{ opacity: Math.max(0.75, inkOf("eye")) }}
       />
 
       <path
-        d="M 100 112 L 91.5 128 H 108.5 Z"
+        d="M 100 122 L 91.5 138 H 108.5 Z"
         fill="none"
-        stroke="var(--color-ws)"
-        strokeWidth="2.4"
+        stroke="var(--color-ink)"
+        strokeWidth="2.3"
         strokeLinejoin="round"
-        className="face-stroke"
-        style={{ opacity: Math.max(0.6, inkOf("nose")) }}
       />
 
       <rect
@@ -172,50 +165,25 @@ export function LivingFaceSvg({
         height="32"
         rx="7"
         fill="none"
-        stroke="var(--color-ws)"
-        strokeWidth="1.85"
+        stroke="var(--color-pin)"
+        strokeWidth="2"
         className="pointer-events-none"
-        style={{ opacity: mood.glow ? 1 : 0.92 }}
       />
 
-      {sitters.map((s) => {
-        const a = ANCHOR.find((x) => x.pos === s.pos);
-        if (!a) return null;
-        return (
-          <circle
-            key={s.id}
-            cx={a.x + (hashJitter(s.id, 0) - 4)}
-            cy={a.y + (hashJitter(s.id, 1) - 4)}
-            r={s.you ? 3.4 : 2.3 + Math.min(1.8, s.weight)}
-            fill={s.you ? "var(--color-ws)" : "var(--color-ink)"}
-            className="pointer-events-none"
-            opacity={s.you ? 1 : 0.5}
-          />
-        );
-      })}
-
-      {ANCHOR.map((a) => (
+      {ANCHOR.map((a, i) => (
         <circle
-          key={a.pos}
+          key={`${a.pos}-${i}`}
           cx={a.x}
           cy={a.y}
-          r="18"
+          r="16"
           fill="transparent"
           className="cursor-pointer"
           onClick={() => onPick(a.pos)}
         >
-          <title>{FACE_TOKS[a.pos]?.role}</title>
+          <title>{FACE_TOKS[a.pos]?.role ?? FACE_TOKS[a.pos]?.t}</title>
         </circle>
       ))}
     </svg>
   );
 }
 
-function hashJitter(id: string, lane: number) {
-  let h = 2166136261 ^ lane;
-  for (let i = 0; i < id.length; i++) {
-    h ^= id.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return (h >>> 0) % 9;
-}

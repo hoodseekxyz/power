@@ -1,5 +1,7 @@
 import { ActionPad } from "@/components/action-pad";
 import { Footer, Header } from "@/components/chrome";
+import { DeskSide } from "@/components/desk-side";
+import { FaceStage } from "@/components/face-stage";
 import { PaperVis } from "@/components/paper-vis";
 import { FACE_TOKS, LAYERS } from "@/lib/jlens";
 import { createFileRoute } from "@tanstack/react-router";
@@ -16,6 +18,7 @@ function Home() {
   const setFocus = useDesk((s) => s.setFocus);
   const select = useDesk((s) => s.select);
   const hydrate = useDesk((s) => s.hydrate);
+  const scope = useDesk((s) => s.scope);
   const selected = useDesk((s) => s.selected);
 
   useEffect(() => {
@@ -57,7 +60,10 @@ function Home() {
   return (
     <div className="paper-grain flex h-dvh flex-col overflow-hidden text-ink">
       <Header />
-      <PaperVis />
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
+        {scope === "slice" ? <PaperVis /> : <FaceStage />}
+        <DeskSide />
+      </div>
       <div className="shrink-0 border-t border-line bg-surface p-2 lg:hidden">
         <ActionPad compact />
       </div>

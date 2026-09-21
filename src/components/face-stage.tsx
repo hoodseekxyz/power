@@ -136,7 +136,7 @@ export function FaceStage() {
         </div>
 
         <p className="mt-2 hidden max-w-sm text-center font-mono text-micro leading-relaxed text-mute sm:mt-3 sm:block">
-          Click <span className="text-ws">^</span>. Buys ink the face. Sells dash it back. Ping sits you.
+          Click <span className="text-pin">^</span>. Buys ink the face. Sells dash it back. Ping sits you.
         </p>
       </div>
     </section>
@@ -168,21 +168,22 @@ function Beat({
 }
 
 function Rings({ active, glow }: { active: number; glow: boolean }) {
+  const bands = [16, 32, 42, 56];
   const sizes = [92, 78, 64, 50];
   return (
     <div className="pointer-events-none absolute inset-0 hidden items-center justify-center sm:flex" aria-hidden>
       {sizes.map((pct, i) => {
-        const layerGuess = 2 + i * 4;
-        const ws = inWorkspace(layerGuess) || i === 1;
-        const on = Math.abs(active - layerGuess) < 3;
+        const layerGuess = bands[i]!;
+        const ws = inWorkspace(layerGuess);
+        const on = Math.abs(active - layerGuess) < 6;
         return (
           <div
             key={pct}
             className={cn(
               "absolute rounded-full border",
-              ws ? "border-ws/35" : "border-line",
+              ws ? "border-pin/35" : "border-line",
               on && ws && "ws-ring",
-              glow && ws && "border-ws/70",
+              glow && ws && "border-pin/70",
             )}
             style={{ width: `${pct}%`, height: `${Math.min(pct, 88)}%`, maxWidth: 560, maxHeight: 520 }}
           />

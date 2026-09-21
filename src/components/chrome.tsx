@@ -38,7 +38,11 @@ export function Header() {
 
       <div className="flex items-center gap-2 sm:gap-3">
         <CaChip label="token" value={LIVE_TOKEN ? shortCa(SITE.tokenCa) : "pending"} live={LIVE_TOKEN} />
-        <CaChip label="plane" value={LIVE_PLANE ? shortCa(SITE.planeCa) : "ping sits you"} live={LIVE_PLANE} />
+        <CaChip
+          label="JLensWorkspace"
+          value={LIVE_PLANE ? shortCa(SITE.planeCa) : "pending"}
+          live={LIVE_PLANE}
+        />
         <button
           type="button"
           onClick={onConnect}
@@ -55,7 +59,7 @@ export function Header() {
 function CaChip({ label, value, live }: { label: string; value: string; live: boolean }) {
   return (
     <div className="hidden min-w-0 flex-col sm:flex">
-      <span className="font-mono text-micro tracking-[0.14em] text-mute">{label}</span>
+      <span className="font-mono text-micro tracking-wide text-mute">{label}</span>
       <span className={`font-mono text-xs tabular-nums ${live ? "text-ws" : "text-ink"}`}>{value}</span>
     </div>
   );

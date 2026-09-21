@@ -118,7 +118,7 @@ export const useDesk = create<Desk>((set, get) => ({
   pinned: "nose",
   injected: null,
   focusLayer: NOSE_LAYER,
-  scope: "slice",
+  scope: "specimen",
   glow: 0,
   hideWs: true,
   events: [
