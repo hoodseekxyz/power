@@ -63,8 +63,6 @@ export function FaceStage() {
 
   return (
     <section className="relative flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center overflow-hidden px-3 py-3 sm:px-6 sm:py-4">
-      <Rings active={focusLayer} glow={glowing} />
-
       <div className="relative z-10 flex w-full max-w-xl flex-col items-center">
         <p className="kicker mb-1 sm:mb-2">the specimen says</p>
         <div key={`${cell.word}-${focusLayer}-${pos}`} className="say-pop text-center">
@@ -167,28 +165,3 @@ function Beat({
   );
 }
 
-function Rings({ active, glow }: { active: number; glow: boolean }) {
-  const bands = [16, 32, 42, 56];
-  const sizes = [92, 78, 64, 50];
-  return (
-    <div className="pointer-events-none absolute inset-0 hidden items-center justify-center sm:flex" aria-hidden>
-      {sizes.map((pct, i) => {
-        const layerGuess = bands[i]!;
-        const ws = inWorkspace(layerGuess);
-        const on = Math.abs(active - layerGuess) < 6;
-        return (
-          <div
-            key={pct}
-            className={cn(
-              "absolute rounded-full border",
-              ws ? "border-pin/35" : "border-line",
-              on && ws && "ws-ring",
-              glow && ws && "border-pin/70",
-            )}
-            style={{ width: `${pct}%`, height: `${Math.min(pct, 88)}%`, maxWidth: 560, maxHeight: 520 }}
-          />
-        );
-      })}
-    </div>
-  );
-}

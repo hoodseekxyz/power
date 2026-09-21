@@ -1,35 +1,83 @@
-import { FACE_TOKS, NOSE_I, type Role } from "@/lib/jlens";
-import { lerp, roleInk, type Mood, type Sitter } from "@/lib/mood";
-import { useEffect, useRef } from "react";
+import { FACE_TOKS, NOSE_I } from "@/lib/jlens";
+import { roleInk, type Mood, type Sitter } from "@/lib/mood";
 
-/** Landmarks matching ornek.png, keyed to FACE_TOKS (pos 28 = ^). */
-export const ANCHOR: { x: number; y: number; pos: number }[] = [
-  { pos: 5, x: 100, y: 20 },
-  { pos: 5, x: 68, y: 38 },
-  { pos: 15, x: 132, y: 38 },
-  { pos: 9, x: 48, y: 64 },
-  { pos: 16, x: 152, y: 64 },
-  { pos: 12, x: 70, y: 72 },
-  { pos: 13, x: 130, y: 72 },
-  { pos: 18, x: 30, y: 104 },
-  { pos: 23, x: 170, y: 104 },
-  { pos: 20, x: 68, y: 104 },
-  { pos: 22, x: 132, y: 104 },
-  { pos: 28, x: 100, y: 132 },
-  { pos: 26, x: 28, y: 140 },
-  { pos: 30, x: 172, y: 140 },
-  { pos: 34, x: 30, y: 172 },
-  { pos: 36, x: 170, y: 172 },
-  { pos: 37, x: 54, y: 198 },
-  { pos: 40, x: 146, y: 198 },
-  { pos: 39, x: 100, y: 188 },
-  { pos: 32, x: 86, y: 256 },
-  { pos: 33, x: 114, y: 256 },
+/**
+ * ornek.png is ASCII, not an illustration.
+ * Typeset the same glyphs on a monospace grid. Do not draw an egg.
+ */
+const COL = 16;
+const ROW = 26;
+const OX = 36;
+const OY = 32;
+const FS = 30;
+
+type Glyph = { ch: string; c: number; r: number; pos: number };
+
+const GLYPHS: Glyph[] = [
+  { ch: "─", c: 7, r: 0, pos: 5 },
+  { ch: "─", c: 8, r: 0, pos: 5 },
+  { ch: "─", c: 9, r: 0, pos: 5 },
+
+  { ch: "/", c: 5, r: 1, pos: 5 },
+  { ch: "\\", c: 11, r: 1, pos: 15 },
+
+  { ch: "/", c: 3, r: 2.4, pos: 9 },
+  { ch: "~", c: 6, r: 2.4, pos: 12 },
+  { ch: "~", c: 10, r: 2.4, pos: 13 },
+  { ch: "\\", c: 13, r: 2.4, pos: 16 },
+
+  { ch: "(", c: 2, r: 4.2, pos: 18 },
+  { ch: "0", c: 6, r: 4.2, pos: 20 },
+  { ch: "0", c: 10, r: 4.2, pos: 22 },
+  { ch: ")", c: 14, r: 4.2, pos: 23 },
+
+  { ch: "|", c: 2, r: 5.8, pos: 26 },
+  { ch: "^", c: 8, r: 6.2, pos: 28 },
+  { ch: "|", c: 14, r: 5.8, pos: 30 },
+
+  { ch: "|", c: 2, r: 7.8, pos: 34 },
+  { ch: "\\", c: 6.2, r: 7.8, pos: 39 },
+  { ch: "/", c: 9.8, r: 7.8, pos: 39 },
+  { ch: "|", c: 14, r: 7.8, pos: 36 },
+
+  { ch: "─", c: 7, r: 8.7, pos: 39 },
+  { ch: "─", c: 8, r: 8.7, pos: 39 },
+  { ch: "─", c: 9, r: 8.7, pos: 39 },
+
+  { ch: "/", c: 4, r: 10.2, pos: 37 },
+  { ch: "\\", c: 12, r: 10.2, pos: 40 },
+
+  { ch: "/", c: 5.4, r: 11.5, pos: 37 },
+  { ch: "\\", c: 10.6, r: 11.5, pos: 40 },
+
+  { ch: "─", c: 6.5, r: 12.6, pos: 17 },
+  { ch: "─", c: 7.5, r: 12.6, pos: 17 },
+  { ch: "─", c: 8.5, r: 12.6, pos: 17 },
+  { ch: "─", c: 9.5, r: 12.6, pos: 17 },
+
+  { ch: "|", c: 7, r: 13.8, pos: 32 },
+  { ch: "|", c: 9, r: 13.8, pos: 33 },
 ];
 
-function tilde(cx: number, cy: number, alert: number) {
-  const lift = -4 * alert;
-  return `M ${cx - 10} ${cy + lift} Q ${cx - 5} ${cy - 7 + lift} ${cx} ${cy + lift} T ${cx + 10} ${cy + lift}`;
+function gx(c: number) {
+  return OX + c * COL;
+}
+function gy(r: number) {
+  return OY + r * ROW;
+}
+
+export const ANCHOR = uniqueAnchors();
+
+function uniqueAnchors() {
+  const seen = new Map<number, { x: number; y: number; pos: number }>();
+  for (const g of GLYPHS) {
+    const prev = seen.get(g.pos);
+    const x = gx(g.c);
+    const y = gy(g.r);
+    if (!prev) seen.set(g.pos, { x, y, pos: g.pos });
+    else seen.set(g.pos, { x: (prev.x + x) / 2, y: (prev.y + y) / 2, pos: g.pos });
+  }
+  return [...seen.values()];
 }
 
 export function LivingFaceSvg({
@@ -45,145 +93,85 @@ export function LivingFaceSvg({
   sitters: Sitter[];
   onPick: (pos: number) => void;
 }) {
-  const leftEyeRef = useRef<SVGEllipseElement>(null);
-  const rightEyeRef = useRef<SVGEllipseElement>(null);
-  const smileL = useRef<SVGPathElement>(null);
-  const smileR = useRef<SVGPathElement>(null);
-  const smileBar = useRef<SVGPathElement>(null);
-  const target = useRef(mood);
-  target.current = mood;
-
-  useEffect(() => {
-    const reduced =
-      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let smile = mood.smile;
-    let open = mood.open;
-    let raf = 0;
-    const tick = () => {
-      const t = reduced ? 1 : 0.14;
-      smile = lerp(smile, target.current.smile, t);
-      open = lerp(open, target.current.open, t);
-      const drop = 10 + 10 * smile;
-      if (smileL.current) smileL.current.setAttribute("d", `M 76 ${168} L 88 ${168 + drop}`);
-      if (smileR.current) smileR.current.setAttribute("d", `M 124 ${168} L 112 ${168 + drop}`);
-      if (smileBar.current) smileBar.current.setAttribute("d", `M 88 ${170 + drop} H 112`);
-      const ry = blink ? 1.2 : 7.6 + 2.4 * open;
-      const rx = 7.2 + 1.6 * open;
-      for (const el of [leftEyeRef.current, rightEyeRef.current]) {
-        if (!el) continue;
-        el.setAttribute("rx", String(rx));
-        el.setAttribute("ry", String(ry));
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blink]);
-
-  const inkOf = (role: Role) => 0.72 + 0.28 * roleInk(sitters, role);
   const sel = ANCHOR.find((a) => a.pos === highlight) ?? ANCHOR.find((a) => a.pos === NOSE_I)!;
+  const nose = GLYPHS.find((g) => g.ch === "^")!;
 
   return (
     <svg
-      viewBox="0 0 200 270"
-      className="h-auto w-full max-w-[17rem] sm:max-w-[24rem] lg:max-w-[26rem]"
+      viewBox="0 0 280 420"
+      className="h-auto w-full max-w-[17rem] sm:max-w-[22rem] lg:max-w-[24rem]"
       role="img"
       aria-label="ASCII face specimen. Click a part to read the lens."
     >
       <title>the specimen</title>
-
       <g
-        fill="none"
-        stroke="var(--color-ink)"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2.45"
+        fontFamily="var(--font-mono), ui-monospace, monospace"
+        fontSize={FS}
+        fontWeight={500}
+        textAnchor="middle"
+        dominantBaseline="middle"
       >
-        <path d="M 78 20 H 122" style={{ opacity: inkOf("crown") }} />
-        <path d="M 62 46 L 74 32" style={{ opacity: inkOf("arc") }} />
-        <path d="M 126 32 L 138 46" style={{ opacity: inkOf("arc") }} />
-        <path d="M 42 74 L 54 56" style={{ opacity: inkOf("arc") }} />
-        <path d="M 146 56 L 158 74" style={{ opacity: inkOf("arc") }} />
-        <path d="M 38 86 Q 26 104 38 122" style={{ opacity: inkOf("cheek") }} />
-        <path d="M 162 86 Q 174 104 162 122" style={{ opacity: inkOf("cheek") }} />
-        <path d="M 28 130 V 150" style={{ opacity: inkOf("jaw") }} />
-        <path d="M 172 130 V 150" style={{ opacity: inkOf("jaw") }} />
-        <path d="M 30 162 V 182" style={{ opacity: inkOf("jaw") }} />
-        <path d="M 170 162 V 182" style={{ opacity: inkOf("jaw") }} />
-        <path d="M 46 202 L 60 184" style={{ opacity: inkOf("chin") }} />
-        <path d="M 140 184 L 154 202" style={{ opacity: inkOf("chin") }} />
-        <path d="M 62 224 L 78 238" style={{ opacity: inkOf("chin") }} />
-        <path d="M 122 238 L 138 224" style={{ opacity: inkOf("chin") }} />
-        <path d="M 78 240 H 122" style={{ opacity: inkOf("chin") }} />
-        <path d="M 86 248 V 266" style={{ opacity: inkOf("neck") }} />
-        <path d="M 114 248 V 266" style={{ opacity: inkOf("neck") }} />
-
-        <path d={tilde(70, 72, mood.alert)} style={{ opacity: inkOf("brow") }} />
-        <path d={tilde(130, 72, mood.alert)} style={{ opacity: inkOf("brow") }} />
-
-        <path ref={smileL} d="M 76 168 L 88 182" style={{ opacity: Math.max(0.7, inkOf("mouth")) }} />
-        <path ref={smileR} d="M 124 168 L 112 182" style={{ opacity: Math.max(0.7, inkOf("mouth")) }} />
-        <path ref={smileBar} d="M 88 184 H 112" style={{ opacity: Math.max(0.7, inkOf("mouth")) }} />
+        {GLYPHS.map((g, i) => {
+          const tok = FACE_TOKS[g.pos];
+          const ink = 0.78 + 0.22 * roleInk(sitters, tok?.role ?? "ask");
+          const ch = g.ch === "0" && blink ? "-" : g.ch;
+          const size = g.ch === "0" || (g.ch === "-" && blink) ? FS * 1.2 : FS;
+          return (
+            <text
+              key={`${g.ch}-${i}`}
+              x={gx(g.c)}
+              y={gy(g.r)}
+              fontSize={size}
+              fill="var(--color-ink)"
+              fillOpacity={ink}
+              className="cursor-pointer select-none"
+              onClick={() => onPick(g.pos)}
+            >
+              {ch}
+            </text>
+          );
+        })}
       </g>
 
-      <ellipse
-        ref={leftEyeRef}
-        cx="68"
-        cy="104"
-        rx="8.2"
-        ry="9"
-        fill="none"
-        stroke="var(--color-ink)"
-        strokeWidth="2.45"
-        style={{ opacity: Math.max(0.75, inkOf("eye")) }}
-      />
-      <ellipse
-        ref={rightEyeRef}
-        cx="132"
-        cy="104"
-        rx="8.2"
-        ry="9"
-        fill="none"
-        stroke="var(--color-ink)"
-        strokeWidth="2.45"
-        style={{ opacity: Math.max(0.75, inkOf("eye")) }}
-      />
-
-      <path
-        d="M 100 122 L 91.5 138 H 108.5 Z"
-        fill="none"
-        stroke="var(--color-ink)"
-        strokeWidth="2.3"
-        strokeLinejoin="round"
-      />
-
       <rect
-        x={sel.x - 16}
-        y={sel.y - 16}
-        width="32"
+        x={gx(nose.c) - 15}
+        y={gy(nose.r) - 16}
+        width="30"
         height="32"
         rx="7"
         fill="none"
         stroke="var(--color-pin)"
-        strokeWidth="2"
+        strokeWidth="2.2"
         className="pointer-events-none"
+        opacity={highlight === NOSE_I || highlight === nose.pos ? 1 : 0.35}
       />
+      {highlight !== NOSE_I && highlight !== nose.pos ? (
+        <rect
+          x={sel.x - 16}
+          y={sel.y - 16}
+          width="32"
+          height="32"
+          rx="8"
+          fill="none"
+          stroke="var(--color-pin)"
+          strokeWidth="2.2"
+          className="pointer-events-none"
+        />
+      ) : null}
 
-      {ANCHOR.map((a, i) => (
+      {ANCHOR.map((a) => (
         <circle
-          key={`${a.pos}-${i}`}
+          key={a.pos}
           cx={a.x}
           cy={a.y}
-          r="16"
+          r="18"
           fill="transparent"
           className="cursor-pointer"
           onClick={() => onPick(a.pos)}
         >
-          <title>{FACE_TOKS[a.pos]?.role ?? FACE_TOKS[a.pos]?.t}</title>
+          <title>{FACE_TOKS[a.pos]?.role}</title>
         </circle>
       ))}
     </svg>
   );
 }
-
