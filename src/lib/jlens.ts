@@ -9,6 +9,7 @@ export const OUTPUT_LAYER = LAYERS - 1;
 export const WORKSPACE = { lo: 36, hi: 48 } as const;
 export const NOSE_LAYER = 42;
 export const NOSE_POS = 28;
+export const K_SPACE = 25;
 
 export type Role =
   | "crown"

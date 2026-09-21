@@ -1,5 +1,5 @@
 import { FaceMark } from "@/components/face-mark";
-import { LIVE_PLANE, LIVE_TOKEN, SITE, shortCa } from "@/lib/site";
+import { LIVE_JLENS, LIVE_JSPACE, LIVE_TOKEN, SITE, lensCa, shortCa } from "@/lib/site";
 import { connect, shortAddr } from "@/lib/wallet";
 import { useDesk } from "@/store/desk";
 import { useState } from "react";
@@ -38,10 +38,11 @@ export function Header() {
 
       <div className="flex items-center gap-2 sm:gap-3">
         <CaChip label="token" value={LIVE_TOKEN ? shortCa(SITE.tokenCa) : "pending"} live={LIVE_TOKEN} />
+        <CaChip label="J-lens" value={LIVE_JLENS ? shortCa(lensCa()) : "pending"} live={LIVE_JLENS} />
         <CaChip
-          label="JLensWorkspace"
-          value={LIVE_PLANE ? shortCa(SITE.planeCa) : "pending"}
-          live={LIVE_PLANE}
+          label="J-space"
+          value={LIVE_JSPACE ? shortCa(SITE.jspaceCa) : "k ≤ 25"}
+          live={LIVE_JSPACE}
         />
         <button
           type="button"
@@ -60,7 +61,7 @@ function CaChip({ label, value, live }: { label: string; value: string; live: bo
   return (
     <div className="hidden min-w-0 flex-col sm:flex">
       <span className="font-mono text-micro tracking-wide text-mute">{label}</span>
-      <span className={`font-mono text-xs tabular-nums ${live ? "text-ws" : "text-ink"}`}>{value}</span>
+      <span className={`font-mono text-xs tabular-nums ${live ? "text-pin" : "text-ink"}`}>{value}</span>
     </div>
   );
 }

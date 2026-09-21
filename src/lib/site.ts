@@ -3,9 +3,11 @@ export const SITE = {
   name: "jacobian-lens",
   ticker: "JLENS",
   tagline: "The lens reads out what an activation is disposed to make the model say.",
-  line: "A wallet is a token in J-space. The tape draws the face.",
+  line: "A wallet is a token in J-space. The lens reads it.",
   tokenCa: "",
   planeCa: "",
+  jlensCa: "",
+  jspaceCa: "",
   pair: "ANTHROPICx1L",
   pairCa: "0x1937caD42b17D43bB2b347ce16d5288887C46c33",
   chainId: 4663,
@@ -21,10 +23,17 @@ export const SITE = {
   site: "https://jlens.lol",
   sparkWei: "100000000000000",
   sparkEth: "0.0001",
+  k: 25,
 } as const;
 
 export const LIVE_TOKEN = SITE.tokenCa.length === 42;
-export const LIVE_PLANE = SITE.planeCa.length === 42;
+export const LIVE_JLENS = SITE.jlensCa.length === 42 || SITE.planeCa.length === 42;
+export const LIVE_JSPACE = SITE.jspaceCa.length === 42;
+export const LIVE_PLANE = LIVE_JLENS;
+
+export function lensCa() {
+  return SITE.jlensCa.length === 42 ? SITE.jlensCa : SITE.planeCa;
+}
 
 export function shortCa(ca: string, n = 4) {
   if (ca.length < 10) return "pending";
@@ -36,4 +45,4 @@ export function explorerAddress(ca: string) {
 }
 
 export const LONG_BLURB =
-  "A wallet is a token in J-space. The tape draws the face. Click the nose. $JLENS on LONG × ANTHROPICx1L. Desk toy of the Jacobian lens. Not affiliated with Anthropic.";
+  "A wallet is a token in J-space. The lens reads it. Click the nose. $JLENS on LONG × ANTHROPICx1L. Pair: J-lens + J-space, k≤25. Not affiliated with Anthropic.";

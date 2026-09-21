@@ -2,14 +2,13 @@ import { ActionPad } from "@/components/action-pad";
 import { LayerColumn } from "@/components/layer-column";
 import { RankPanel } from "@/components/rank-panel";
 import { cn } from "@/lib/cn";
-import { FACE_TOKS, occupancy } from "@/lib/jlens";
+import { FACE_TOKS, K_SPACE } from "@/lib/jlens";
 import { moodFrom } from "@/lib/mood";
 import { useDesk } from "@/store/desk";
 
 export function DeskSide() {
   const you = useDesk((s) => s.you);
   const guest = useDesk((s) => s.guest);
-  const injected = useDesk((s) => s.injected);
   const events = useDesk((s) => s.events);
   const err = useDesk((s) => s.err);
   const scope = useDesk((s) => s.scope);
@@ -18,9 +17,9 @@ export function DeskSide() {
   const tape = useDesk((s) => s.tape);
   const select = useDesk((s) => s.select);
   const focusLayer = useDesk((s) => s.focusLayer);
-  const occ = occupancy(injected, you);
   const mood = moodFrom(tape, sitters, false);
   const vol = tape.buy + tape.sell;
+  const k = Math.min(K_SPACE, sitters.length);
 
   return (
     <aside className="flex w-full shrink-0 flex-col gap-3 border-t border-line bg-surface p-3 sm:gap-4 sm:p-5 lg:h-full lg:w-80 lg:overflow-y-auto lg:border-t-0 lg:border-l">
@@ -31,17 +30,20 @@ export function DeskSide() {
 
       <div className="flex items-center justify-between gap-3">
         <p className="font-mono text-xs text-ink">
-          you = <span className="text-ws">{you}</span>
-          {guest ? <span className="text-mute"> · guest</span> : null}
+          J-space <span className="text-pin">{k}</span>
+          <span className="text-mute"> / {K_SPACE}</span>
         </p>
         <div className="flex min-w-0 flex-1 items-center gap-2">
           <div className="h-1.5 min-w-0 flex-1 bg-ink/10">
             <div
-              className="h-full bg-ws transition-[width] duration-300 ease-out"
-              style={{ width: `${Math.min(100, occ.pct * 100)}%` }}
+              className="h-full bg-pin transition-[width] duration-300 ease-out"
+              style={{ width: `${(k / K_SPACE) * 100}%` }}
             />
           </div>
-          <span className="font-mono text-micro tabular-nums text-mute">{Math.round(occ.pct * 100)}%</span>
+          <span className="font-mono text-micro tabular-nums text-mute">
+            you = <span className="text-ink">{you}</span>
+            {guest ? " · guest" : ""}
+          </span>
         </div>
       </div>
 

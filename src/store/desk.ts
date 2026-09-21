@@ -9,7 +9,7 @@ import {
   type TapeEvent,
 } from "@/lib/jlens";
 import { moodFrom, sitPos, VISUAL_POS, type Mood, type Sitter, type Tape } from "@/lib/mood";
-import { LIVE_PLANE, SITE } from "@/lib/site";
+import { LIVE_PLANE, SITE, lensCa } from "@/lib/site";
 import { SEL, connect as walletConnect, sendCall, shortTx } from "@/lib/wallet";
 
 export type Scope = "specimen" | "slice";
@@ -73,7 +73,7 @@ function ghostSitter(i: number): Sitter {
 
 function upsertSitter(list: Sitter[], next: Sitter): Sitter[] {
   const i = list.findIndex((s) => s.id === next.id || (next.you && s.you));
-  if (i < 0) return [next, ...list].slice(0, 18);
+  if (i < 0) return [next, ...list].slice(0, 25);
   const copy = [...list];
   const prev = copy[i]!;
   copy[i] = { ...prev, ...next, weight: Math.min(3, prev.weight + next.weight) };
@@ -103,7 +103,7 @@ function sitLocal(
       you: true,
     }),
   }));
-  const extra = kind === "spark" ? (LIVE_PLANE ? " + 0.0001 ETH" : " + 0.0001 ETH (plane pending)") : "";
+  const extra = kind === "spark" ? (LIVE_PLANE ? " + 0.0001 ETH" : " + 0.0001 ETH (J-lens pending)") : "";
   get().note(kind, `${you} at ${FACE_TOKS[pos]?.t ?? pos}${extra}`);
 }
 
@@ -240,7 +240,7 @@ export const useDesk = create<Desk>((set, get) => ({
           addr = await walletConnect();
           get().connect(addr);
         }
-        const h = await sendCall(SITE.planeCa, SEL.ping);
+        const h = await sendCall(lensCa(), SEL.ping);
         get().note("ping", `tx ${shortTx(h)}`);
       } catch (e) {
         set({ err: e instanceof Error ? e.message : "ping failed" });
@@ -260,7 +260,7 @@ export const useDesk = create<Desk>((set, get) => ({
           addr = await walletConnect();
           get().connect(addr);
         }
-        const h = await sendCall(SITE.planeCa, SEL.spark, SITE.sparkWei);
+        const h = await sendCall(lensCa(), SEL.spark, SITE.sparkWei);
         get().note("spark", `tx ${shortTx(h)}`);
       } catch (e) {
         set({ err: e instanceof Error ? e.message : "spark failed" });
@@ -294,7 +294,7 @@ export const useDesk = create<Desk>((set, get) => ({
     void (async () => {
       set({ sending: "fit" });
       try {
-        const h = await sendCall(SITE.planeCa, SEL.fit);
+        const h = await sendCall(lensCa(), SEL.fit);
         get().note("fit", `tx ${shortTx(h)}`);
       } catch (e) {
         set({ err: e instanceof Error ? e.message : "fit failed" });

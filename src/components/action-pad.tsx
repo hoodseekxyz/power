@@ -16,7 +16,7 @@ export function ActionPad({ compact }: { compact?: boolean }) {
       <Act
         k="space"
         label="ping"
-        hint={sending === "ping" ? "signing…" : LIVE_PLANE ? "sit on-chain" : "sit + ink"}
+        hint={sending === "ping" ? "signing…" : LIVE_PLANE ? "sit in J-space" : "sit · k ≤ 25"}
         onClick={ping}
         busy={sending === "ping"}
       />
