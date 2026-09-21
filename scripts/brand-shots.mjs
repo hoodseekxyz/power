@@ -40,6 +40,13 @@ const CSS = `
   @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
   html, body { margin: 0; background: #fff; color: #111; font-family: "IBM Plex Mono", ui-monospace, monospace; }
   * { box-sizing: border-box; }
+  .word {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    margin: 0;
+    line-height: 1;
+  }
 `;
 
 const pages = {
@@ -55,13 +62,13 @@ const pages = {
       .b{width:1500px;height:500px;display:flex;align-items:center;gap:48px;padding:36px 64px;background:#fff}
       svg{width:280px;height:auto;flex-shrink:0}
       .t{display:flex;flex-direction:column;gap:10px}
-      h1{font-family:Fraunces,serif;font-weight:500;font-size:92px;margin:0;letter-spacing:-0.04em;line-height:0.9}
+      h1.word{font-size:84px}
       .sub{font-size:22px;letter-spacing:0.04em}
       .k{color:#c026d3;font-size:28px}
       .pair{font-size:16px;color:#5c5c5c;letter-spacing:0.08em}
     </style>
     <div class="b">${EGG}<div class="t">
-      <h1>JLENS</h1>
+      <h1 class="word">JLENS</h1>
       <div class="sub">J-lens reads. J-space holds.</div>
       <div class="k">k ≤ 25</div>
       <div class="pair">$JLENS · LONG × ANTHROPICx1L</div>
@@ -125,13 +132,13 @@ const pages = {
     html: `<style>${CSS}
       .p{width:1200px;height:630px;background:#fff;display:flex;align-items:center;gap:56px;padding:48px 72px}
       svg{width:320px;height:auto;flex-shrink:0}
-      h1{font-family:Fraunces,serif;font-weight:500;font-size:84px;margin:0;letter-spacing:-0.04em;line-height:0.9}
+      h1.word{font-size:76px}
       .sub{margin-top:14px;font-size:22px}
       .k{margin-top:10px;color:#c026d3;font-size:24px}
       .pair{margin-top:18px;font-size:16px;color:#5c5c5c}
     </style>
     <div class="p">${EGG}<div>
-      <h1>JLENS</h1>
+      <h1 class="word">JLENS</h1>
       <div class="sub">J-lens reads. J-space holds.</div>
       <div class="k">k ≤ 25</div>
       <div class="pair">$JLENS · LONG × ANTHROPICx1L · jlens.lol</div>
@@ -143,12 +150,12 @@ const pages = {
     html: `<style>${CSS}
       .b{width:1200px;height:264px;display:flex;align-items:center;gap:36px;padding:20px 48px;background:#fff}
       svg{width:160px;height:auto;flex-shrink:0}
-      h1{font-family:Fraunces,serif;font-weight:500;font-size:64px;margin:0;letter-spacing:-0.04em}
+      h1.word{font-size:56px}
       .sub{font-size:18px;margin-top:6px}
       .k{color:#c026d3;font-size:18px;margin-top:4px}
     </style>
     <div class="b">${EGG}<div>
-      <h1>JLENS</h1>
+      <h1 class="word">JLENS</h1>
       <div class="sub">J-lens reads. J-space holds.</div>
       <div class="k">k ≤ 25 · LONG × ANTHROPICx1L</div>
     </div></div>`,
@@ -160,6 +167,7 @@ await mkdir(OUT, { recursive: true });
 for (const [name, spec] of Object.entries(pages)) {
   const page = await browser.newPage({ viewport: { width: spec.w, height: spec.h }, deviceScaleFactor: 2 });
   await page.setContent(spec.html, { waitUntil: "networkidle" });
+  await page.evaluate(() => document.fonts.ready);
   const file = join(OUT, `${name}.png`);
   await mkdir(dirname(file), { recursive: true });
   await page.screenshot({ path: file, type: "png" });
