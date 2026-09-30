@@ -18,8 +18,8 @@ function How() {
         <figure className="grid items-center gap-6 border border-line p-4 sm:grid-cols-[220px_1fr] sm:p-6">
           <Gnomon />
           <figcaption className="text-sm leading-relaxed text-ink/80">
-            Each ring is an odd number of new cells. Odds only know how to finish a square. The red ring is the
-            seat that just sat. Everything inside it was already there.
+            The desk is this square, shared. Twelve rings, each three pixels thick. Everyone looking at it sees the
+            same picture, because the pool is the brush.
           </figcaption>
         </figure>
 
@@ -47,15 +47,24 @@ function How() {
         </p>
 
         <section className="grid gap-3 sm:grid-cols-3">
-          <Card kicker="ping" title="+1">
-            One more ring. The side grows by one. The room holds {SITE.sideMax}.
+          <Card kicker="ordinary buy" title="black">
+            Heats one pixel in the open ring. The pool paid $SQPOWER out.
           </Card>
-          <Card kicker="spark" title="+3">
-            Three rings at once, and {SITE.sparkEth} ETH of glow on the square contract. Glow, not yield.
+          <Card kicker="large buy" title="red">
+            Above the top fifth of buys in the window, the whole ring closes. That wallet takes the seat. The number
+            is read from the tape, not chosen.
           </Card>
-          <Card kicker="the door" title="12">
-            The next sit past the cap throws the lightest other seat. Your own seat is spared until you are the only
-            mass left.
+          <Card kicker="sell" title="grey">
+            Cools the last hot pixel. The cell stays. A sell never erases the square.
+          </Card>
+        </section>
+
+        <section className="grid gap-3 sm:grid-cols-2">
+          <Card kicker="twelve" title="an epoch">
+            Twelve rings and the square is full. It holds. The next print opens a blank one.
+          </Card>
+          <Card kicker="ping · spark" title="glow">
+            They touch the square contract. They do not paint. {SITE.sparkEth} ETH on a spark is glow, not yield.
           </Card>
         </section>
 
@@ -64,20 +73,20 @@ function How() {
             <p className="kicker text-power">buy</p>
             <Arrow from="GME" to="$SQPOWER" />
             <p className="mt-3 text-sm leading-relaxed text-mute">
-              The pool takes GME and pays the token out. A buy is the market, not a seat.
+              The pool takes GME and pays the token out. On the square that is a black pixel, or a red ring if the buy is large.
             </p>
           </article>
           <article className="border border-line p-4">
             <p className="kicker">sell</p>
             <Arrow from="$SQPOWER" to="GME" />
             <p className="mt-3 text-sm leading-relaxed text-mute">
-              The token goes back into the pool and GME comes out. The tape on the desk is these two motions, live.
+              The token goes back into the pool and GME comes out. On the square that only cools a pixel.
             </p>
           </article>
         </section>
 
         <p className="text-sm leading-relaxed text-mute">
-          The pixels on the desk are the pool, shared. A buy heats one. A large buy closes the ring in red and takes the seat. A sell cools a pixel and leaves it there. Twelve rings make an epoch. Then a blank square opens.
+          Not affiliated with GameStop.
         </p>
         <Link to="/" className="font-mono text-xs text-power underline">
           back to the live desk
