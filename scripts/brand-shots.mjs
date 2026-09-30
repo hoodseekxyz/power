@@ -4,23 +4,6 @@ import { dirname, join } from "node:path";
 
 const OUT = "/workspace/public/brand";
 
-/** Side-6 square. Last gnomon (step 5) is you, in vermillion. */
-function square(size) {
-  const cells = [];
-  for (let r = 0; r < 12; r++) {
-    for (let c = 0; c < 12; c++) {
-      const step = Math.max(r, c);
-      let fill = "#e7e1d4";
-      if (step < 2) fill = "#1a1a1a";
-      else if (step < 3) fill = "rgba(26,26,26,0.55)";
-      else if (step < 5) fill = "rgba(26,26,26,0.78)";
-      else if (step === 5) fill = "#c2412d";
-      cells.push(`<rect x="${c}" y="${r}" width="0.92" height="0.92" fill="${fill}"/>`);
-    }
-  }
-  return `<svg viewBox="0 0 12 12" width="${size}" height="${size}" shape-rendering="crispEdges">${cells.join("")}</svg>`;
-}
-
 function mark(size) {
   return `<svg viewBox="0 0 40 40" width="${size}" height="${size}"><rect width="40" height="40" fill="#1a1a1a"/><text x="30" y="15" text-anchor="end" fill="#f3efe6" font-family="Newsreader, Georgia, serif" font-size="14">2</text></svg>`;
 }
@@ -71,75 +54,75 @@ const pages = {
     w: 1600,
     h: 900,
     html: `<style>${CSS}
-      .p{width:1600px;height:900px;background:#f3efe6;display:flex;flex-direction:column;justify-content:space-between;padding:72px 80px}
-      h1{font-size:92px;max-width:16ch}
-      .row{display:flex;justify-content:space-between;align-items:flex-end}
-      .eq{font-size:28px}
+      .p{width:1600px;height:900px;display:flex;align-items:center;background:#f3efe6}
+      .t{padding:0 64px}
+      h1{font-size:64px;max-width:14ch}
+      .eq{margin-top:28px;font-size:22px}
     </style>
-    <div class="p">
+    <div class="p">${mark(900)}<div class="t">
       <div class="kicker">an article · ANTHROPIC²</div>
-      <h1 class="display">The square of the sum is not the sum of the squares.</h1>
-      <div class="row">
-        <div class="eq">(Σa)² = Σa² <span class="hot">+ 2Σab</span></div>
-        <div class="kicker">$POWER</div>
-      </div>
-    </div>`,
+      <h1 class="display" style="margin-top:16px">The square of the sum is not the sum of the squares.</h1>
+      <div class="eq">(Σa)² = Σa² <span class="hot">+ 2Σab</span></div>
+      <div class="kicker" style="margin-top:28px">sqpower.xyz</div>
+    </div></div>`,
   },
   "x-post-1": {
     w: 1600,
     h: 900,
     html: `<style>${CSS}
-      .p{width:1600px;height:900px;background:#f3efe6;display:flex;align-items:center;gap:72px;padding:64px 80px}
-      .sq{width:520px;height:520px;flex-shrink:0}
-      h2{font-size:64px;max-width:12ch}
-      p{font-size:22px;line-height:1.45;max-width:28ch;margin-top:18px}
+      .p{width:1600px;height:900px;display:flex;align-items:center;background:#f3efe6}
+      .t{padding:0 72px}
+      h2{font-size:88px}
+      p{font-size:22px;line-height:1.45;max-width:28ch;margin-top:22px}
     </style>
-    <div class="p"><div class="sq">${square(520)}</div><div>
+    <div class="p">${mark(900)}<div class="t">
       <div class="kicker">the identity</div>
-      <h2 class="display">(Σa)² ≠ Σa²</h2>
-      <p>Add the squares and you miss the pool. The red gnomon is the seat you just took.</p>
+      <h2 class="display" style="margin-top:14px">(Σa)² ≠ Σa²</h2>
+      <p>Add the squares and you miss the pool.</p>
+      <div class="kicker" style="margin-top:28px">$POWER · sqpower.xyz</div>
     </div></div>`,
   },
   "x-post-2": {
     w: 1080,
     h: 1080,
     html: `<style>${CSS}
-      .p{width:1080px;height:1080px;background:#f3efe6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:64px}
-      .nums{display:flex;gap:48px;text-align:center}
-      .n{font-size:92px}
-      .l{font-size:16px;color:#6b6560;letter-spacing:0.14em}
+      .p{width:1080px;height:1080px;display:flex;align-items:center;background:#f3efe6}
+      .nums{display:flex;flex-direction:column;gap:28px;padding:0 56px}
+      .row{display:flex;align-items:baseline;gap:18px}
+      .n{font-size:84px}
+      .l{font-size:16px;color:#6b6560;letter-spacing:0.12em}
     </style>
-    <div class="p">
-      <div class="kicker">nobody owns this alone</div>
+    <div class="p">${mark(560)}
       <div class="nums">
-        <div><div class="display n">36</div><div class="l">(Σa)²</div></div>
-        <div><div class="display n">10</div><div class="l">Σa²</div></div>
-        <div><div class="display n hot">26</div><div class="l">2Σab</div></div>
+        <div class="kicker">nobody owns this alone</div>
+        <div class="row"><div class="display n">36</div><div class="l">(Σa)²</div></div>
+        <div class="row"><div class="display n">10</div><div class="l">Σa²</div></div>
+        <div class="row"><div class="display n hot">26</div><div class="l">2Σab</div></div>
       </div>
-      ${square(420)}
-      <div style="font-size:18px;color:#6b6560">side 6 · the red band is you</div>
     </div>`,
   },
   "x-post-3": {
     w: 1080,
     h: 1080,
     html: `<style>${CSS}
-      .p{width:1080px;height:1080px;background:#1a1a1a;color:#f3efe6;display:flex;flex-direction:column;justify-content:space-between;padding:72px}
-      h2{font-size:84px;color:#f3efe6}
-      li{font-size:28px;line-height:1.6}
-      ul{list-style:none;padding:0;margin:0}
-      .hot{color:#e07060}
+      .p{width:1080px;height:1080px;display:flex;align-items:center;background:#f3efe6}
+      .t{padding:56px 48px;display:flex;flex-direction:column;justify-content:space-between}
+      h2{font-size:64px}
+      li{font-size:26px;line-height:1.55}
+      ul{list-style:none;padding:0;margin:28px 0 0}
     </style>
-    <div class="p">
-      <div class="kicker" style="color:#b7b0a4">how a seat works</div>
-      <h2 class="display">Side caps at 12.</h2>
-      <ul>
-        <li><span class="hot">ping</span> adds 1</li>
-        <li><span class="hot">spark</span> adds 3 · 0.0001 ETH glow</li>
-        <li>the 13th step evicts the lightest other seat</li>
-      </ul>
-      <div style="font-size:18px;letter-spacing:0.12em;color:#b7b0a4">$POWER · ANTHROPIC² · NOT ANTHROPIC</div>
-    </div>`,
+    <div class="p">${mark(420)}<div class="t">
+      <div>
+        <div class="kicker">how a seat works</div>
+        <h2 class="display" style="margin-top:16px">Side caps at 12.</h2>
+        <ul>
+          <li><span class="hot">ping</span> adds 1</li>
+          <li><span class="hot">spark</span> adds 3</li>
+          <li>the next step evicts the lightest other seat</li>
+        </ul>
+      </div>
+      <div class="kicker">$POWER · sqpower.xyz</div>
+    </div></div>`,
   },
 };
 

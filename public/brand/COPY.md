@@ -45,7 +45,6 @@ $POWER pairs with ANTHROPICx1L on Robinhood Chain. The site is https://sqpower.x
 (Σa)² is not Σa².
 
 Add the squares and you miss the pool.
-The red gnomon is the seat you just took.
 
 $POWER · ANTHROPIC²
 LONG × ANTHROPICx1L
