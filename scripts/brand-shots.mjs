@@ -21,10 +21,9 @@ function square(size) {
   return `<svg viewBox="0 0 12 12" width="${size}" height="${size}" shape-rendering="crispEdges">${cells.join("")}</svg>`;
 }
 
-const MARK = `<svg viewBox="0 0 64 64" width="64" height="64" aria-hidden>
-  <rect width="64" height="64" fill="#1a1a1a"/>
-  <text x="50" y="22" text-anchor="end" fill="#f3efe6" font-family="Newsreader, Georgia, serif" font-size="22">2</text>
-</svg>`;
+function mark(size) {
+  return `<svg viewBox="0 0 40 40" width="${size}" height="${size}"><rect width="40" height="40" fill="#1a1a1a"/><text x="30" y="15" text-anchor="end" fill="#f3efe6" font-family="Newsreader, Georgia, serif" font-size="14">2</text></svg>`;
+}
 
 const CSS = `
   @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500&display=swap");
@@ -52,14 +51,15 @@ const pages = {
     w: 1500,
     h: 500,
     html: `<style>${CSS}
-      .b{width:1500px;height:500px;display:flex;align-items:center;gap:64px;padding:40px 72px;background:#f3efe6}
-      .sq{width:340px;height:340px;flex-shrink:0}
+      .b{width:1500px;height:500px;display:flex;align-items:center;background:#f3efe6}
+      .mark{width:500px;height:500px;flex-shrink:0}
       h1{font-size:84px}
+      .t{padding:0 72px}
       .sub{margin-top:16px;font-size:22px}
       .k{margin-top:10px;font-size:26px}
       .pair{margin-top:18px;font-size:16px;color:#6b6560;letter-spacing:0.08em}
     </style>
-    <div class="b"><div class="sq">${square(340)}</div><div>
+    <div class="b">${mark(500)}<div class="t">
       <div class="kicker">ANTHROPIC²</div>
       <h1 class="word" style="margin-top:12px;font-size:84px">POWER</h1>
       <div class="sub">(Σa)² is not Σa²</div>
@@ -158,8 +158,8 @@ for (const [name, spec] of Object.entries(pages)) {
   if (name === "x-banner") {
     await page.setViewportSize({ width: 1200, height: 264 });
     await page.setContent(
-      `<style>${CSS}.b{width:1200px;height:264px;display:flex;align-items:center;gap:28px;padding:24px 40px;background:#f3efe6}.sq{width:200px;height:200px}h1{font-size:56px}.sub{margin-top:8px;font-size:16px}</style>
-      <div class="b"><div class="sq">${square(200)}</div><div><div class="kicker">ANTHROPIC²</div><h1 class="word" style="margin-top:8px">POWER</h1><div class="sub hot">the cross term is the pool</div></div></div>`,
+      `<style>${CSS}.b{width:1200px;height:264px;display:flex;align-items:center;background:#f3efe6}.t{padding:0 36px}h1{font-size:52px}.sub{margin-top:8px;font-size:16px}</style>
+      <div class="b">${mark(264)}<div class="t"><div class="kicker">ANTHROPIC²</div><h1 class="word" style="margin-top:8px">POWER</h1><div class="sub hot">sqpower.xyz</div></div></div>`,
       { waitUntil: "networkidle" },
     );
     await page.evaluate(() => document.fonts.ready);
