@@ -6,69 +6,39 @@ export const Route = createFileRoute("/how")({ component: How });
 
 function How() {
   return (
-    <div className="paper-grain flex min-h-dvh flex-col text-ink">
+    <div className="flex min-h-dvh flex-col bg-paper text-ink">
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
         <p className="kicker">HOW</p>
-        <h1 className="mt-2 font-display text-3xl font-medium tracking-[-0.03em]">
-          J-lens · J-space
-        </h1>
-        <p className="mt-4 max-w-prose text-pretty text-base leading-relaxed text-ink/80">
-          The paper’s treasure is a pair. The <span className="text-pin">J-lens</span> reads what an
-          activation is poised to say. <span className="text-pin">J-space</span> is the set of
-          points expressible as a sparse nonnegative combination of those vectors, with occupancy{" "}
-          <em>k ≤ {SITE.k}</em>. One wallet, one coefficient. Full workspace evicts the lightest
-          seat. Desk toy of <em>{SITE.paperTitle}</em>. Click <span className="text-pin">^</span>{" "}
-          (pos 28). Layer 42 reads “nose”.
+        <h1 className="mt-2 font-display text-4xl tracking-[-0.03em]">{SITE.mark}</h1>
+        <p className="mt-4 max-w-prose text-base leading-relaxed text-ink/80">
+          {SITE.line} A seat holds a coefficient <em>a</em>. The board is the square of the sum.
+          Your own power is <em>a²</em>. Everything between those two numbers is the cross term,
+          and no single wallet owns it.
         </p>
-        <pre className="mt-6 overflow-x-auto border border-line bg-surface p-4 font-mono text-xs text-ink">
-{`lens_l(h) = unembed( J_l @ h )
-J-space  = { Σ a_i v_i  |  a_i ≥ 0,  |S| ≤ 25 }`}
+        <pre className="mt-6 overflow-x-auto border border-line bg-surface p-4 font-mono text-xs">
+{`(Σ a)²  =  Σ a²  +  2 Σ aᵢaⱼ
+side     ≤  ${SITE.sideMax}`}
         </pre>
-        <ul className="mt-8 space-y-4 font-mono text-sm leading-relaxed">
+        <ul className="mt-8 space-y-3 font-mono text-sm leading-relaxed">
           <li>
-            Specimen is the ASCII face. Magenta plate sits on <span className="text-pin">^</span>.
-            Slice is the paper dump, behind a tab.
+            <span className="text-power">ping</span> — add 1. One more gnomon on the square. Guest play is on.
           </li>
           <li>
-            <span className="text-pin">ping</span> — free sit in J-space on the glyph you clicked.
-            Guest play is on. k counts toward 25.
+            <span className="text-power">spark</span> — add 3, and {SITE.sparkEth} ETH when the square contract is live. Glow, not yield.
           </li>
+          <li>Side caps at {SITE.sideMax}. The next sit evicts the lightest other seat.</li>
           <li>
-            <span className="text-pin">spark</span> — sit + {SITE.sparkEth} ETH. Ignition. ETH
-            forwards to J-space as glow, not yield.
-          </li>
-          <li>
-            <span className="text-pin">fit</span> — run the transport. Layers fill. Last row is the
-            mouth.
-          </li>
-          <li>
-            <span className="text-pin">swap</span> — paper’s probe-swap. Nose becomes beak.
-          </li>
-          <li>
-            Overlay last. Remix on chain {SITE.chainId}: deploy{" "}
-            <span className="text-ink">JLensWorkspace.sol</span> (0.8.24, optimizer 200, Cancun).
-            One tx deploys two children — <span className="text-ink">jlens()</span> and{" "}
-            <span className="text-ink">jspace()</span>. Paste those CAs. Then LONG mints $
-            {SITE.ticker}. Owner <span className="text-pin">bindToken</span> once on the lens.
-            Never put a workspace CA in the LONG form.
+            Chain {SITE.chainId} {SITE.chainName}. Pair {SITE.pair}. Deploy <span className="text-ink">Power.sol</span>{" "}
+            (0.8.24, optimizer 200, Cancun). Paste the CA. Then LONG mints ${SITE.ticker}. Owner{" "}
+            <span className="text-power">bindToken</span> once. Never put the square CA in the LONG form.
           </li>
         </ul>
-        <p className="mt-8 max-w-prose text-pretty text-sm leading-relaxed text-mute">
-          Keys: space ping · j fit · s spark · x swap. Chain {SITE.chainId} {SITE.chainName}. Pair{" "}
-          {SITE.pair}. Token CA empty until LONG mints ${SITE.ticker}. Not affiliated with
-          Anthropic. Apache-2.0 companion:{" "}
-          <a className="underline" href={SITE.source}>
-            anthropics/jacobian-lens
-          </a>
-          . Site{" "}
-          <a className="underline" href={SITE.site}>
-            jlens.lol
-          </a>{" "}
-          · {SITE.xHandle}.
+        <p className="mt-8 text-sm leading-relaxed text-mute">
+          Not affiliated with Anthropic. Token CA stays empty until LONG mints ${SITE.ticker}.
         </p>
-        <Link to="/" className="mt-8 inline-block font-mono text-xs text-pin underline">
-          back to the specimen
+        <Link to="/" className="mt-8 inline-block font-mono text-xs text-power underline">
+          back to the square
         </Link>
       </main>
       <Footer />

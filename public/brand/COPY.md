@@ -1,47 +1,74 @@
-# JLENS — X + LONG copy
+# POWER — X pack
 
-Handle: @jlensLOL
-Site: jlens.lol
+Mark: ANTHROPIC²
+Ticker: $POWER
+Pair: LONG × ANTHROPICx1L
+Not affiliated with Anthropic.
 
-## X bio (160)
+## X bio
 
-A wallet is a token in J-space. The lens reads it. Click the nose.
+(Σa)² is not Σa². The cross term is the pool.
 
-$JLENS · LONG × ANTHROPICx1L
-jlens.lol
+$POWER · ANTHROPIC²
+LONG × ANTHROPICx1L
 Not Anthropic.
 
-(alt, 159)
-$JLENS. J-lens reads. J-space holds k≤25. Click ^ — L42 says nose. LONG × ANTHROPICx1L. jlens.lol · not Anthropic.
+Location: the square
+Website: (domain when live)
 
-Location: J-space
-Website: https://jlens.lol
+## X article
 
-## LONG.xyz description
+Title: The square of the sum is not the sum of the squares
+Cover: x-cover.png
 
-A wallet is a token in J-space. The lens reads it. Click the nose. $JLENS on LONG × ANTHROPICx1L. Pair: J-lens + J-space, k≤25. Desk toy of the Jacobian lens. Not affiliated with Anthropic.
+A seat on POWER is a coefficient. Call it a.
 
-## X post 1 — the pair (attach x-post-1.png)
+The board is not your square. It is the square of everyone sitting.
 
-J-lens reads.
-J-space holds.
+(Σa)² = Σa² + 2Σab
 
-k ≤ 25. One wallet, one coefficient. The 26th sit evicts the lightest seat.
+Σa² is what each seat can point at and say "mine."
+2Σab is the cross term. It only exists because two seats are in the same square. No single wallet owns it.
 
-Not a chart. A workspace.
+That gap is the pool.
 
-$JLENS · LONG × ANTHROPICx1L
-jlens.lol
+Ping adds 1. Spark adds 3, and 0.0001 ETH of glow once the square contract is live. Glow is not yield.
 
-## X post 2 — the punchline (attach x-post-2.png)
+The side caps at 12. The step that would make 13 evicts the lightest other seat. Your own seat is spared until you are the only mass left, and then the square is simply full.
 
-the specimen says
+This is not a chart. It is an identity you can sit inside.
 
-nose
+$POWER pairs with ANTHROPICx1L on Robinhood Chain. Anthropic did not make this and does not run it.
 
-^ is pos 28. At layer 42 the lens names a word that is not in the prompt.
+## Post 1 — the identity (x-post-1.png)
 
-Click the nose. Sit in J-space.
+(Σa)² is not Σa².
 
-$JLENS
-jlens.lol
+Add the squares and you miss the pool.
+The red gnomon is the seat you just took.
+
+$POWER · ANTHROPIC²
+LONG × ANTHROPICx1L
+Not Anthropic.
+
+## Post 2 — the pool (x-post-2.png)
+
+36 is the square of the sum.
+10 is the sum of the squares.
+26 is the part nobody owns alone.
+
+That 26 is 2Σab. That is the pool.
+
+$POWER
+
+## Post 3 — the rule (x-post-3.png)
+
+Side caps at 12.
+
+ping adds 1.
+spark adds 3.
+the next step evicts the lightest other seat.
+
+Sit in the square.
+$POWER · ANTHROPIC²
+Not Anthropic.

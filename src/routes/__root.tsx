@@ -3,7 +3,7 @@ import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "jacobian-lens";
+const APP_NAME = "POWER";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -14,9 +14,9 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "A wallet is a token in J-space. The lens reads it. Click the nose. $JLENS · LONG × ANTHROPICx1L. Not affiliated with Anthropic.",
+          "The square of the sum is not the sum of the squares. $POWER · ANTHROPIC² · ANTHROPICx1L. Not affiliated with Anthropic.",
       },
-      { name: "theme-color", content: "#ffffff" },
+      { name: "theme-color", content: "#f3efe6" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },

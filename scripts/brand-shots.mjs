@@ -4,161 +4,139 @@ import { dirname, join } from "node:path";
 
 const OUT = "/workspace/public/brand";
 
-const EGG = `
-<svg viewBox="0 0 200 272" fill="none" stroke="#111" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M 80 20 H 120"/>
-  <path d="M 72 34 L 60 50"/>
-  <path d="M 128 34 L 140 50"/>
-  <path d="M 52 60 L 40 80"/>
-  <path d="M 148 60 L 160 80"/>
-  <path d="M 34 90 Q 24 108 34 126"/>
-  <path d="M 166 90 Q 176 108 166 126"/>
-  <path d="M 30 134 V 154"/>
-  <path d="M 170 134 V 154"/>
-  <path d="M 30 164 V 184"/>
-  <path d="M 170 164 V 184"/>
-  <path d="M 78 168 L 90 182"/>
-  <path d="M 122 168 L 110 182"/>
-  <path d="M 90 186 H 110"/>
-  <path d="M 40 198 L 54 216"/>
-  <path d="M 160 198 L 146 216"/>
-  <path d="M 58 222 L 76 238"/>
-  <path d="M 142 222 L 124 238"/>
-  <path d="M 76 240 H 124"/>
-  <path d="M 86 250 V 266"/>
-  <path d="M 114 250 V 266"/>
-  <path d="M 60 70 Q 65 63 70 70 T 80 70"/>
-  <path d="M 120 70 Q 125 63 130 70 T 140 70"/>
-  <path d="M 91 140 L 100 124 L 109 140"/>
-  <ellipse cx="68" cy="104" rx="8.2" ry="9"/>
-  <ellipse cx="132" cy="104" rx="8.2" ry="9"/>
-  <rect x="85" y="116" width="30" height="32" rx="7" stroke="#c026d3" stroke-width="2.1"/>
-</svg>
-`;
+/** Side-6 square. Last gnomon (step 5) is you, in vermillion. */
+function square(size) {
+  const cells = [];
+  for (let r = 0; r < 12; r++) {
+    for (let c = 0; c < 12; c++) {
+      const step = Math.max(r, c);
+      let fill = "#e7e1d4";
+      if (step < 2) fill = "#1a1a1a";
+      else if (step < 3) fill = "rgba(26,26,26,0.55)";
+      else if (step < 5) fill = "rgba(26,26,26,0.78)";
+      else if (step === 5) fill = "#c2412d";
+      cells.push(`<rect x="${c}" y="${r}" width="0.92" height="0.92" fill="${fill}"/>`);
+    }
+  }
+  return `<svg viewBox="0 0 12 12" width="${size}" height="${size}" shape-rendering="crispEdges">${cells.join("")}</svg>`;
+}
+
+const MARK = `<svg viewBox="0 0 64 64" width="64" height="64" aria-hidden>
+  <rect width="64" height="64" fill="#1a1a1a"/>
+  <text x="50" y="22" text-anchor="end" fill="#f3efe6" font-family="Newsreader, Georgia, serif" font-size="22">2</text>
+</svg>`;
 
 const CSS = `
-  @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
-  html, body { margin: 0; background: #fff; color: #111; font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500&display=swap");
+  html, body { margin: 0; background: #f3efe6; color: #1a1a1a; font-family: "IBM Plex Mono", ui-monospace, monospace; }
   * { box-sizing: border-box; }
-  .word {
-    font-family: "IBM Plex Mono", ui-monospace, monospace;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    margin: 0;
-    line-height: 1;
-  }
+  .word { font-family: "IBM Plex Mono", ui-monospace, monospace; font-weight: 500; letter-spacing: 0.14em; margin: 0; line-height: 1; }
+  .display { font-family: Newsreader, Georgia, serif; font-weight: 500; letter-spacing: -0.03em; margin: 0; line-height: 0.95; }
+  .kicker { font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: #6b6560; }
+  .hot { color: #c2412d; }
 `;
 
 const pages = {
   "x-logo": {
     w: 800,
     h: 800,
-    html: `<style>${CSS} .wrap{width:800px;height:800px;display:flex;align-items:center;justify-content:center;background:#fff} svg{width:560px;height:auto}</style><div class="wrap">${EGG}</div>`,
+    html: `<style>${CSS}
+      .w{width:800px;height:800px;display:flex;align-items:center;justify-content:center;background:#f3efe6}
+      svg{width:520px;height:520px}
+    </style><div class="w">${square(520)}</div>`,
   },
   "x-banner": {
     w: 1500,
     h: 500,
     html: `<style>${CSS}
-      .b{width:1500px;height:500px;display:flex;align-items:center;gap:48px;padding:36px 64px;background:#fff}
-      svg{width:280px;height:auto;flex-shrink:0}
-      .t{display:flex;flex-direction:column;gap:10px}
-      h1.word{font-size:84px}
-      .sub{font-size:22px;letter-spacing:0.04em}
-      .k{color:#c026d3;font-size:28px}
-      .pair{font-size:16px;color:#5c5c5c;letter-spacing:0.08em}
+      .b{width:1500px;height:500px;display:flex;align-items:center;gap:64px;padding:40px 72px;background:#f3efe6}
+      .sq{width:340px;height:340px;flex-shrink:0}
+      h1{font-size:84px}
+      .sub{margin-top:16px;font-size:22px}
+      .k{margin-top:10px;font-size:26px}
+      .pair{margin-top:18px;font-size:16px;color:#6b6560;letter-spacing:0.08em}
     </style>
-    <div class="b">${EGG}<div class="t">
-      <h1 class="word">JLENS</h1>
-      <div class="sub">J-lens reads. J-space holds.</div>
-      <div class="k">k ≤ 25</div>
-      <div class="pair">$JLENS · LONG × ANTHROPICx1L</div>
+    <div class="b"><div class="sq">${square(340)}</div><div>
+      <div class="kicker">ANTHROPIC²</div>
+      <h1 class="word" style="margin-top:12px;font-size:84px">POWER</h1>
+      <div class="sub">(Σa)² is not Σa²</div>
+      <div class="k hot">the cross term is the pool</div>
+      <div class="pair">$POWER · LONG × ANTHROPICx1L</div>
     </div></div>`,
+  },
+  "x-cover": {
+    w: 1600,
+    h: 900,
+    html: `<style>${CSS}
+      .p{width:1600px;height:900px;background:#f3efe6;display:flex;flex-direction:column;justify-content:space-between;padding:72px 80px}
+      h1{font-size:92px;max-width:16ch}
+      .row{display:flex;justify-content:space-between;align-items:flex-end}
+      .eq{font-size:28px}
+    </style>
+    <div class="p">
+      <div class="kicker">an article · ANTHROPIC²</div>
+      <h1 class="display">The square of the sum is not the sum of the squares.</h1>
+      <div class="row">
+        <div class="eq">(Σa)² = Σa² <span class="hot">+ 2Σab</span></div>
+        <div class="kicker">$POWER</div>
+      </div>
+    </div>`,
   },
   "x-post-1": {
     w: 1600,
     h: 900,
     html: `<style>${CSS}
-      .p{width:1600px;height:900px;background:#fff;display:flex;flex-direction:column;padding:48px 64px 40px}
-      .row{display:flex;gap:0;flex:1;min-height:0}
-      .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:12px 32px}
-      .col + .col{border-left:1px solid #e8e8e8}
-      .kicker{font-size:14px;letter-spacing:0.22em;text-transform:uppercase;color:#5c5c5c}
-      h2{font-family:Fraunces,serif;font-weight:500;font-size:52px;margin:0;letter-spacing:-0.03em}
-      .cap{font-size:18px;color:#111;text-align:center;max-width:28ch;line-height:1.45}
-      svg{width:240px;height:auto}
-      .grid{display:grid;grid-template-columns:repeat(5,28px);gap:10px}
-      .seat{width:28px;height:28px;border:1.5px solid #111;border-radius:6px}
-      .seat.on{background:#c026d3;border-color:#c026d3}
-      .foot{border-top:1px solid #e8e8e8;padding-top:22px;font-size:20px;letter-spacing:0.04em}
+      .p{width:1600px;height:900px;background:#f3efe6;display:flex;align-items:center;gap:72px;padding:64px 80px}
+      .sq{width:520px;height:520px;flex-shrink:0}
+      h2{font-size:64px;max-width:12ch}
+      p{font-size:22px;line-height:1.45;max-width:28ch;margin-top:18px}
     </style>
-    <div class="p">
-      <div class="row">
-        <div class="col">
-          <div class="kicker">the readout</div>
-          <h2>J-lens</h2>
-          ${EGG}
-          <div class="cap">reads what an activation is poised to say</div>
-        </div>
-        <div class="col">
-          <div class="kicker">the workspace</div>
-          <h2>J-space</h2>
-          <div class="grid">${Array.from({ length: 25 }, (_, i) => `<div class="seat${i < 5 ? " on" : ""}"></div>`).join("")}</div>
-          <div class="cap">k ≤ 25 · one wallet, one coefficient. the 26th evicts the lightest seat.</div>
-        </div>
-      </div>
-      <div class="foot">a wallet is a token in J-space · $JLENS · LONG × ANTHROPICx1L</div>
-    </div>`,
+    <div class="p"><div class="sq">${square(520)}</div><div>
+      <div class="kicker">the identity</div>
+      <h2 class="display">(Σa)² ≠ Σa²</h2>
+      <p>Add the squares and you miss the pool. The red gnomon is the seat you just took.</p>
+    </div></div>`,
   },
   "x-post-2": {
     w: 1080,
     h: 1080,
     html: `<style>${CSS}
-      .p{width:1080px;height:1080px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:48px}
-      .kicker{font-size:14px;letter-spacing:0.22em;text-transform:uppercase;color:#5c5c5c}
-      .say{font-family:Fraunces,serif;font-weight:500;font-size:88px;letter-spacing:-0.04em;line-height:1}
-      .meta{font-size:18px;color:#5c5c5c}
-      svg{width:420px;height:auto}
+      .p{width:1080px;height:1080px;background:#f3efe6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:64px}
+      .nums{display:flex;gap:48px;text-align:center}
+      .n{font-size:92px}
+      .l{font-size:16px;color:#6b6560;letter-spacing:0.14em}
     </style>
     <div class="p">
-      <div class="kicker">the specimen says</div>
-      <div class="say">nose</div>
-      ${EGG}
-      <div class="meta">^ · pos 28 · L42 workspace · $JLENS</div>
+      <div class="kicker">nobody owns this alone</div>
+      <div class="nums">
+        <div><div class="display n">36</div><div class="l">(Σa)²</div></div>
+        <div><div class="display n">10</div><div class="l">Σa²</div></div>
+        <div><div class="display n hot">26</div><div class="l">2Σab</div></div>
+      </div>
+      ${square(420)}
+      <div style="font-size:18px;color:#6b6560">side 6 · the red band is you</div>
     </div>`,
   },
-  "og": {
-    w: 1200,
-    h: 630,
+  "x-post-3": {
+    w: 1080,
+    h: 1080,
     html: `<style>${CSS}
-      .p{width:1200px;height:630px;background:#fff;display:flex;align-items:center;gap:56px;padding:48px 72px}
-      svg{width:320px;height:auto;flex-shrink:0}
-      h1.word{font-size:76px}
-      .sub{margin-top:14px;font-size:22px}
-      .k{margin-top:10px;color:#c026d3;font-size:24px}
-      .pair{margin-top:18px;font-size:16px;color:#5c5c5c}
+      .p{width:1080px;height:1080px;background:#1a1a1a;color:#f3efe6;display:flex;flex-direction:column;justify-content:space-between;padding:72px}
+      h2{font-size:84px;color:#f3efe6}
+      li{font-size:28px;line-height:1.6}
+      ul{list-style:none;padding:0;margin:0}
+      .hot{color:#e07060}
     </style>
-    <div class="p">${EGG}<div>
-      <h1 class="word">JLENS</h1>
-      <div class="sub">J-lens reads. J-space holds.</div>
-      <div class="k">k ≤ 25</div>
-      <div class="pair">$JLENS · LONG × ANTHROPICx1L · jlens.lol</div>
-    </div></div>`,
-  },
-  "x-feed": {
-    w: 1200,
-    h: 264,
-    html: `<style>${CSS}
-      .b{width:1200px;height:264px;display:flex;align-items:center;gap:36px;padding:20px 48px;background:#fff}
-      svg{width:160px;height:auto;flex-shrink:0}
-      h1.word{font-size:56px}
-      .sub{font-size:18px;margin-top:6px}
-      .k{color:#c026d3;font-size:18px;margin-top:4px}
-    </style>
-    <div class="b">${EGG}<div>
-      <h1 class="word">JLENS</h1>
-      <div class="sub">J-lens reads. J-space holds.</div>
-      <div class="k">k ≤ 25 · LONG × ANTHROPICx1L</div>
-    </div></div>`,
+    <div class="p">
+      <div class="kicker" style="color:#b7b0a4">how a seat works</div>
+      <h2 class="display">Side caps at 12.</h2>
+      <ul>
+        <li><span class="hot">ping</span> adds 1</li>
+        <li><span class="hot">spark</span> adds 3 · 0.0001 ETH glow</li>
+        <li>the 13th step evicts the lightest other seat</li>
+      </ul>
+      <div style="font-size:18px;letter-spacing:0.12em;color:#b7b0a4">$POWER · ANTHROPIC² · NOT ANTHROPIC</div>
+    </div>`,
   },
 };
 
@@ -171,10 +149,17 @@ for (const [name, spec] of Object.entries(pages)) {
   const file = join(OUT, `${name}.png`);
   await mkdir(dirname(file), { recursive: true });
   await page.screenshot({ path: file, type: "png" });
-  if (name === "og") {
+  if (name === "x-cover") {
     await page.screenshot({ path: "/workspace/public/og.jpg", type: "jpeg", quality: 88 });
   }
-  if (name === "x-feed") {
+  if (name === "x-banner") {
+    await page.setViewportSize({ width: 1200, height: 264 });
+    await page.setContent(
+      `<style>${CSS}.b{width:1200px;height:264px;display:flex;align-items:center;gap:28px;padding:24px 40px;background:#f3efe6}.sq{width:200px;height:200px}h1{font-size:56px}.sub{margin-top:8px;font-size:16px}</style>
+      <div class="b"><div class="sq">${square(200)}</div><div><div class="kicker">ANTHROPIC²</div><h1 class="word" style="margin-top:8px">POWER</h1><div class="sub hot">the cross term is the pool</div></div></div>`,
+      { waitUntil: "networkidle" },
+    );
+    await page.evaluate(() => document.fonts.ready);
     await page.screenshot({ path: "/workspace/public/x-banner.jpg", type: "jpeg", quality: 88 });
   }
   await page.close();

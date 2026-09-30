@@ -1,25 +1,18 @@
-import { ActionPad } from "@/components/action-pad";
 import { Footer, Header } from "@/components/chrome";
-import { DeskSide } from "@/components/desk-side";
-import { FaceStage } from "@/components/face-stage";
-import { PaperVis } from "@/components/paper-vis";
-import { FACE_TOKS, LAYERS } from "@/lib/jlens";
+import { PowerSide } from "@/components/power-side";
+import { SquareBoard } from "@/components/square-board";
+import { usePower } from "@/store/power";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { useDesk } from "@/store/desk";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
-  const ping = useDesk((s) => s.ping);
-  const spark = useDesk((s) => s.spark);
-  const fit = useDesk((s) => s.fit);
-  const swap = useDesk((s) => s.swap);
-  const setFocus = useDesk((s) => s.setFocus);
-  const select = useDesk((s) => s.select);
-  const hydrate = useDesk((s) => s.hydrate);
-  const scope = useDesk((s) => s.scope);
-  const selected = useDesk((s) => s.selected);
+  const seats = usePower((s) => s.seats);
+  const ping = usePower((s) => s.ping);
+  const spark = usePower((s) => s.spark);
+  const hydrate = usePower((s) => s.hydrate);
+  const sending = usePower((s) => s.sending);
 
   useEffect(() => {
     hydrate();
@@ -32,40 +25,36 @@ function Home() {
       if (e.key === " " || e.code === "Space") {
         e.preventDefault();
         ping();
-      } else if (e.key === "j" || e.key === "J") fit();
-      else if (e.key === "s" || e.key === "S") spark();
-      else if (e.key === "x" || e.key === "X") swap();
-      else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        setFocus(Math.min(LAYERS - 1, selected.layer + 1));
-      } else if (e.key === "ArrowDown") {
-        e.preventDefault();
-        setFocus(Math.max(0, selected.layer - 1));
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        const p = Math.max(0, selected.pos - 1);
-        const tok = FACE_TOKS[p];
-        if (tok) select(selected.layer, p, tok.role === "nose" ? "nose" : tok.role);
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        const p = Math.min(FACE_TOKS.length - 1, selected.pos + 1);
-        const tok = FACE_TOKS[p];
-        if (tok) select(selected.layer, p, tok.role === "nose" ? "nose" : tok.role);
-      }
+      } else if (e.key === "s" || e.key === "S") spark();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [ping, spark, fit, swap, setFocus, select, selected]);
+  }, [ping, spark]);
 
   return (
-    <div className="paper-grain flex h-dvh flex-col overflow-hidden text-ink">
+    <div className="flex h-dvh flex-col overflow-hidden bg-paper text-ink">
       <Header />
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
-        {scope === "slice" ? <PaperVis /> : <FaceStage />}
-        <DeskSide />
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
+        <main className="flex shrink-0 items-center justify-center p-4 sm:p-8 lg:min-h-0 lg:flex-1">
+          <SquareBoard seats={seats} onPing={ping} />
+        </main>
+        <PowerSide />
       </div>
-      <div className="shrink-0 border-t border-line bg-surface p-2 lg:hidden">
-        <ActionPad compact />
+      <div className="flex shrink-0 gap-2 border-t border-line bg-paper p-2 lg:hidden">
+        <button
+          type="button"
+          onClick={ping}
+          className="h-11 flex-1 border border-ink bg-ink font-mono text-xs text-paper"
+        >
+          {sending === "ping" ? "…" : "ping +1"}
+        </button>
+        <button
+          type="button"
+          onClick={spark}
+          className="h-11 flex-1 border border-power bg-power font-mono text-xs text-paper"
+        >
+          {sending === "spark" ? "…" : `spark +3`}
+        </button>
       </div>
       <Footer />
     </div>
