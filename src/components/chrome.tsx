@@ -31,7 +31,7 @@ export function Header() {
             {SITE.name}
           </div>
           <div className="mt-0.5 font-mono text-micro tracking-wide text-mute">
-            {SITE.mark} · ${SITE.ticker} · {SITE.pair}
+            ${SITE.ticker} · {SITE.pair}
           </div>
         </div>
       </a>
@@ -57,14 +57,14 @@ function Mark() {
     <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden className="shrink-0">
       <rect width="40" height="40" fill="var(--color-ink)" />
       <text
-        x="30"
-        y="14"
-        textAnchor="end"
+        x="20"
+        y="24"
+        textAnchor="middle"
         fill="var(--color-paper)"
-        fontFamily="var(--font-display), serif"
-        fontSize="14"
+        fontFamily="var(--font-mono), ui-monospace, monospace"
+        fontSize="9"
       >
-        2
+        GME
       </text>
     </svg>
   );

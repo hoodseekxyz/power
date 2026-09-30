@@ -14,7 +14,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "The square of the sum is not the sum of the squares. $SQPOWER · LONG × GME · sqpower.xyz. Not affiliated with Anthropic or GameStop.",
+          "The square of the sum is not the sum of the squares. $SQPOWER · LONG × GME · sqpower.xyz. Not affiliated with GameStop.",
       },
       { name: "theme-color", content: "#f3efe6" },
     ],

@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 const OUT = "/workspace/public/brand";
 
 function mark(size) {
-  return `<svg viewBox="0 0 40 40" width="${size}" height="${size}"><rect width="40" height="40" fill="#1a1a1a"/><text x="30" y="15" text-anchor="end" fill="#f3efe6" font-family="Newsreader, Georgia, serif" font-size="14">2</text></svg>`;
+  return `<svg viewBox="0 0 40 40" width="${size}" height="${size}"><rect width="40" height="40" fill="#1a1a1a"/><text x="20" y="24" text-anchor="middle" fill="#f3efe6" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9">GME</text></svg>`;
 }
 
 const CSS = `
@@ -27,7 +27,7 @@ const pages = {
       svg{width:800px;height:800px;display:block}
     </style><div class="w"><svg viewBox="0 0 40 40" width="800" height="800">
       <rect width="40" height="40" fill="#1a1a1a"/>
-      <text x="30" y="15" text-anchor="end" fill="#f3efe6" font-family="Newsreader, Georgia, serif" font-size="14">2</text>
+      <text x="20" y="24" text-anchor="middle" fill="#f3efe6" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="9">GME</text>
     </svg></div>`,
   },
   "x-banner": {
@@ -43,7 +43,7 @@ const pages = {
       .pair{margin-top:18px;font-size:16px;color:#6b6560;letter-spacing:0.08em}
     </style>
     <div class="b">${mark(500)}<div class="t">
-      <div class="kicker">ANTHROPIC²</div>
+      <div class="kicker">GME</div>
       <h1 class="word" style="margin-top:12px;font-size:84px">POWER</h1>
       <div class="sub">(Σa)² is not Σa²</div>
       <div class="k hot">the cross term is the pool</div>
@@ -60,7 +60,7 @@ const pages = {
       .eq{margin-top:28px;font-size:22px}
     </style>
     <div class="p">${mark(900)}<div class="t">
-      <div class="kicker">an article · ANTHROPIC²</div>
+      <div class="kicker">an article · GME</div>
       <h1 class="display" style="margin-top:16px">The square of the sum is not the sum of the squares.</h1>
       <div class="eq">(Σa)² = Σa² <span class="hot">+ 2Σab</span></div>
       <div class="kicker" style="margin-top:28px">sqpower.xyz</div>
@@ -142,7 +142,7 @@ for (const [name, spec] of Object.entries(pages)) {
     await page.setViewportSize({ width: 1200, height: 264 });
     await page.setContent(
       `<style>${CSS}.b{width:1200px;height:264px;display:flex;align-items:center;background:#f3efe6}.t{padding:0 36px}h1{font-size:52px}.sub{margin-top:8px;font-size:16px}</style>
-      <div class="b">${mark(264)}<div class="t"><div class="kicker">ANTHROPIC²</div><h1 class="word" style="margin-top:8px">POWER</h1><div class="sub hot">sqpower.xyz</div></div></div>`,
+      <div class="b">${mark(264)}<div class="t"><div class="kicker">GME</div><h1 class="word" style="margin-top:8px">POWER</h1><div class="sub hot">sqpower.xyz</div></div></div>`,
       { waitUntil: "networkidle" },
     );
     await page.evaluate(() => document.fonts.ready);

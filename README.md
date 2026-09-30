@@ -1,6 +1,6 @@
 # POWER
 
-Ticker `SQPOWER`. Mark `ANTHROPIC²`. Site: [sqpower.xyz](https://sqpower.xyz). Pair: LONG × GME `0x1b0e319c6a659f002271b69db8a7df2f911c153e`. **Not affiliated with Anthropic or GameStop.**
+Ticker `SQPOWER`. Mark `GME`. Site: [sqpower.xyz](https://sqpower.xyz). Pair: LONG × GME `0x1b0e319c6a659f002271b69db8a7df2f911c153e`. **Not affiliated with GameStop.**
 
 The square of the sum is not the sum of the squares. A seat holds a coefficient `a`. The board is `(Σa)²`. Your own power is `a²`. The gap is the cross term `2Σab` — the pool no single wallet owns.
 

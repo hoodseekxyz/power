@@ -1,7 +1,7 @@
 /** Public constants. Empty CA = pending. Do not invent an address. */
 export const SITE = {
   name: "POWER",
-  mark: "ANTHROPIC²",
+  mark: "GME",
   ticker: "SQPOWER",
   line: "The square of the sum is not the sum of the squares.",
   tokenCa: "",

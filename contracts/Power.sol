@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 /**
  * @title  Power
- * @notice ANTHROPIC². (Σa)² is not Σa². The cross term is the pool.
+ * @notice GME pair. (Σa)² is not Σa². The cross term is the pool.
  *         Side caps at 12. Spark is 0.0001 ETH of glow, not yield.
  *         Do not paste this CA into the LONG token form.
  */
