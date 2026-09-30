@@ -1,7 +1,9 @@
 import { Footer, Header } from "@/components/chrome";
+import { Panel } from "@/components/panel";
 import { PowerSide } from "@/components/power-side";
 import { SitEvent } from "@/components/sit-event";
 import { SquareBoard } from "@/components/square-board";
+import { usePrints } from "@/components/use-prints";
 import { usePower } from "@/store/power";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -15,6 +17,7 @@ function Home() {
   const hydrate = usePower((s) => s.hydrate);
   const sending = usePower((s) => s.sending);
   const flash = usePower((s) => s.flash);
+  const { rows, err } = usePrints();
 
   useEffect(() => {
     hydrate();
@@ -34,29 +37,25 @@ function Home() {
   }, [ping, spark]);
 
   return (
-    <div className="flex h-dvh flex-col overflow-hidden bg-paper text-ink">
+    <div className="flex min-h-dvh flex-col bg-paper text-ink">
       <Header />
       <SitEvent />
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
-        <main className="flex shrink-0 items-center justify-center p-4 sm:p-8 lg:min-h-0 lg:flex-1">
-          <SquareBoard seats={seats} onPing={ping} flash={flash} />
-        </main>
-        <PowerSide />
+      <div className="grid flex-1 gap-3 p-3 lg:grid-cols-12 lg:items-start">
+        <Panel kicker="the board" live className="lg:col-span-5">
+          <div className="mt-3 flex justify-center">
+            <SquareBoard seats={seats} onPing={ping} flash={flash} />
+          </div>
+        </Panel>
+        <div className="lg:col-span-7">
+          <PowerSide rows={rows} err={err} />
+        </div>
       </div>
-      <div className="flex shrink-0 gap-2 border-t border-line bg-paper p-2 lg:hidden">
-        <button
-          type="button"
-          onClick={ping}
-          className="h-11 flex-1 border border-ink bg-ink font-mono text-xs text-paper"
-        >
+      <div className="sticky bottom-0 flex gap-2 border-t border-line bg-paper p-2 lg:hidden">
+        <button type="button" onClick={ping} className="h-11 flex-1 border border-ink bg-ink font-mono text-xs text-paper">
           {sending === "ping" ? "…" : "ping +1"}
         </button>
-        <button
-          type="button"
-          onClick={spark}
-          className="h-11 flex-1 border border-power bg-power font-mono text-xs text-paper"
-        >
-          {sending === "spark" ? "…" : `spark +3`}
+        <button type="button" onClick={spark} className="h-11 flex-1 border border-power bg-power font-mono text-xs text-paper">
+          {sending === "spark" ? "…" : "spark +3"}
         </button>
       </div>
       <Footer />
