@@ -1,3 +1,4 @@
+import { TradeTape } from "@/components/trade-tape";
 import { SITE } from "@/lib/site";
 import { stats, usePower } from "@/store/power";
 
@@ -25,8 +26,9 @@ export function PowerSide() {
         <Stat k="2Σab" v={cross} hot />
       </div>
       <p className="font-mono text-xs leading-relaxed text-mute">
-        The cross term is the part no single seat owns. Sum the squares and you miss the pool.
+        The cross term is the part no single seat owns. Buys and sells are the pool, not the sit.
       </p>
+      <TradeTape />
 
       <ul className="flex flex-col gap-1.5">
         {seats.map((seat) => (
