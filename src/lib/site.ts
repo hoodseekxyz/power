@@ -5,7 +5,7 @@ export const SITE = {
   ticker: "POWER",
   line: "The square of the sum is not the sum of the squares.",
   tokenCa: "",
-  squareCa: "",
+  squareCa: "0x303C627d93Fd8418fa6ea62e7d746FE484749d25",
   pair: "ANTHROPICx1L",
   pairCa: "0x1937caD42b17D43bB2b347ce16d5288887C46c33",
   chainId: 4663,

@@ -10,9 +10,8 @@ Side caps at 12. Ping adds 1. Spark adds 3 and, once deployed, 0.0001 ETH of glo
 
 Robinhood 4663. `contracts/Power.sol`. Solidity 0.8.24, optimizer 200, Cancun. Constructor none.
 
-1. Deploy `Power`. Paste the CA into `src/lib/site.ts` as `squareCa`.
+1. Square is live: `0x303C627d93Fd8418fa6ea62e7d746FE484749d25`. Do not put this CA in the LONG form.
 2. LONG mints `$POWER`. Paste `tokenCa`.
 3. Owner `bindToken` once.
-4. Do not put the square CA in the LONG form.
 
 JLENS stays on [hoodseekxyz/jlens](https://github.com/hoodseekxyz/jlens). This tree is POWER. Do not push it onto the JLENS repo.
