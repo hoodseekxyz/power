@@ -4,7 +4,7 @@ export const SITE = {
   mark: "GME",
   ticker: "SQPOWER",
   line: "The square of the sum is not the sum of the squares.",
-  tokenCa: "",
+  tokenCa: "0xf35561b228cd1208f16cb9bbc5ee28b872fc1e18",
   squareCa: "0x303C627d93Fd8418fa6ea62e7d746FE484749d25",
   pair: "GME",
   pairCa: "0x1b0e319c6a659f002271b69db8a7df2f911c153e",
