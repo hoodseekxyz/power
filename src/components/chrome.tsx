@@ -54,19 +54,7 @@ export function Header() {
 
 function Mark() {
   return (
-    <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden className="shrink-0">
-      <rect width="40" height="40" fill="var(--color-ink)" />
-      <text
-        x="20"
-        y="24"
-        textAnchor="middle"
-        fill="var(--color-paper)"
-        fontFamily="var(--font-mono), ui-monospace, monospace"
-        fontSize="9"
-      >
-        GME
-      </text>
-    </svg>
+    <img src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 shrink-0" />
   );
 }
 
