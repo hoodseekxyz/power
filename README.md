@@ -11,7 +11,7 @@ Side caps at 12. Ping adds 1. Spark adds 3 and, once deployed, 0.0001 ETH of glo
 Robinhood 4663. `contracts/Power.sol`. Solidity 0.8.24, optimizer 200, Cancun. Constructor none.
 
 1. Square is live: `0x303C627d93Fd8418fa6ea62e7d746FE484749d25`. Do not put this CA in the LONG form.
-2. Token is live: `0xf35561b228cd1208f16cb9bbc5ee28b872fc1e18`. Owner calls `bindToken` once with this address, from the square contract. Not the GME address. Not the square address.
+2. Token `0xf35561b228cd1208f16cb9bbc5ee28b872fc1e18` is bound on the square. `bindToken` cannot be called again.
 3. Owner `bindToken` once.
 
 JLENS stays on [hoodseekxyz/jlens](https://github.com/hoodseekxyz/jlens). This tree is POWER. Do not push it onto the JLENS repo.
