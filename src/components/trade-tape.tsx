@@ -9,7 +9,8 @@ export function compact(n: number) {
 }
 
 export function TradeTape({ rows, err }: { rows: Print[] | null; err: string | null }) {
-  const last = rows?.[0];
+  const view = (rows ?? []).slice(0, 12);
+  const last = view[0];
 
   return (
     <div className="mt-3 flex flex-col gap-2">
@@ -26,7 +27,7 @@ export function TradeTape({ rows, err }: { rows: Print[] | null; err: string | n
         )}
       </p>
       <ul className="flex max-h-44 flex-col gap-1.5 overflow-y-auto">
-        {(rows ?? []).map((row) => (
+        {view.map((row) => (
           <li key={row.hash} className="flex items-baseline justify-between gap-2 font-mono text-xs">
             <a className={row.side === "buy" ? "text-power" : "text-ink"} href={`${SITE.explorer}/tx/${row.hash}`}>
               {row.side}

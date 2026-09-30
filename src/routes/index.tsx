@@ -1,23 +1,23 @@
 import { Footer, Header } from "@/components/chrome";
+import { MarketBoard } from "@/components/market-board";
 import { Panel } from "@/components/panel";
 import { PowerSide } from "@/components/power-side";
 import { SitEvent } from "@/components/sit-event";
-import { SquareBoard } from "@/components/square-board";
 import { usePrints } from "@/components/use-prints";
+import { paintMarket } from "@/lib/paint";
 import { usePower } from "@/store/power";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
-  const seats = usePower((s) => s.seats);
   const ping = usePower((s) => s.ping);
   const spark = usePower((s) => s.spark);
   const hydrate = usePower((s) => s.hydrate);
   const sending = usePower((s) => s.sending);
-  const flash = usePower((s) => s.flash);
   const { rows, err } = usePrints();
+  const picture = useMemo(() => paintMarket(rows ?? []), [rows]);
 
   useEffect(() => {
     hydrate();
@@ -39,15 +39,15 @@ function Home() {
   return (
     <div className="flex min-h-dvh flex-col bg-paper text-ink">
       <Header />
-      <SitEvent />
+      <SitEvent picture={picture} />
       <div className="grid flex-1 gap-3 p-3 lg:grid-cols-12 lg:items-start">
         <Panel kicker="the board" live className="lg:col-span-5">
           <div className="mt-3 flex justify-center">
-            <SquareBoard seats={seats} onPing={ping} flash={flash} />
+            <MarketBoard cells={picture.cells} />
           </div>
         </Panel>
         <div className="lg:col-span-7">
-          <PowerSide rows={rows} err={err} />
+          <PowerSide rows={rows} err={err} picture={picture} />
         </div>
       </div>
       <div className="sticky bottom-0 flex gap-2 border-t border-line bg-paper p-2 lg:hidden">

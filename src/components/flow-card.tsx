@@ -2,8 +2,9 @@ import { compact } from "@/components/trade-tape";
 import type { Print } from "@/lib/trades";
 
 export function FlowCard({ rows }: { rows: Print[] | null }) {
-  const buys = (rows ?? []).filter((r) => r.side === "buy");
-  const sells = (rows ?? []).filter((r) => r.side === "sell");
+  const windowed = (rows ?? []).slice(0, 40);
+  const buys = windowed.filter((r) => r.side === "buy");
+  const sells = windowed.filter((r) => r.side === "sell");
   const buyG = buys.reduce((a, r) => a + r.gme, 0);
   const sellG = sells.reduce((a, r) => a + r.gme, 0);
   const max = Math.max(buyG, sellG, 1e-9);

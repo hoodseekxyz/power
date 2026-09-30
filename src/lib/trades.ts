@@ -2,6 +2,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { SITE } from "@/lib/site";
 
 const SWAP = "0x40e9cecb9f5f1f1c5b9c97dec2917b7ee92e57ba5563708daca94dd84ad7112f";
+const TRANSFER = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
+const HOOK = "0x4e3468951d49f2eea976ed0d6e75ffcb44a9a544";
+const ROUTERS = new Set([
+  "0x6f02324d20cc679d0e585290caa6b16bacbc0f77",
+  "0x8876789976decbfcbbbe364623c63652db8c0904",
+  HOOK,
+]);
 
 export type Print = {
   side: "buy" | "sell";
@@ -9,6 +16,7 @@ export type Print = {
   gme: number;
   hash: string;
   block: number;
+  who: string;
 };
 
 async function rpc(method: string, params: unknown[]) {
@@ -34,20 +42,57 @@ function fromWei(n: bigint) {
   return Number(whole) + Number(frac) / 1e18;
 }
 
+type Log = {
+  data: string;
+  transactionHash: string;
+  blockNumber: string;
+  logIndex: string;
+  topics: string[];
+};
+
+function addr(topic: string) {
+  return `0x${topic.slice(-40)}`.toLowerCase();
+}
+
 export const getTrades = createServerFn({ method: "GET" }).handler(async (): Promise<Print[]> => {
   const head = (await rpc("eth_blockNumber", [])) as string;
   const bn = Number.parseInt(head, 16);
-  const logs = (await rpc("eth_getLogs", [
-    {
-      fromBlock: "0x" + Math.max(0, bn - 12000).toString(16),
-      toBlock: "latest",
-      address: SITE.poolManager,
-      topics: [SWAP, SITE.poolId],
-    },
-  ])) as { data: string; transactionHash: string; blockNumber: string; logIndex: string }[];
+  const from = Math.max(SITE.poolStartBlock, bn - 80_000);
+  const span = { fromBlock: `0x${from.toString(16)}`, toBlock: "latest" };
+  const [swapLogs, transferLogs] = (await Promise.all([
+    rpc("eth_getLogs", [
+      { ...span, address: SITE.poolManager, topics: [SWAP, SITE.poolId] },
+    ]),
+    rpc("eth_getLogs", [{ ...span, address: SITE.tokenCa, topics: [TRANSFER] }]),
+  ])) as [Log[], Log[]];
+
+  const pool = SITE.poolManager.toLowerCase();
+  const moved = new Map<string, { from: string; to: string; amt: bigint }[]>();
+  for (const lg of transferLogs) {
+    const row = { from: addr(lg.topics[1] ?? ""), to: addr(lg.topics[2] ?? ""), amt: BigInt(lg.data) };
+    const list = moved.get(lg.transactionHash) ?? [];
+    list.push(row);
+    moved.set(lg.transactionHash, list);
+  }
+
+  const who = (hash: string, side: Print["side"], fallback: string) => {
+    const rows = moved.get(hash) ?? [];
+    const hit =
+      side === "buy"
+        ? rows.filter((r) => r.from === pool && r.to !== pool).sort((a, b) => (a.amt > b.amt ? -1 : 1))[0]
+        : rows.filter((r) => r.to === pool && r.from !== pool).sort((a, b) => (a.amt > b.amt ? -1 : 1))[0];
+    let wallet = (side === "buy" ? hit?.to : hit?.from) ?? fallback;
+    if (ROUTERS.has(wallet)) {
+      const hop = rows
+        .filter((r) => r.from === wallet && !ROUTERS.has(r.to) && r.to !== pool)
+        .sort((a, b) => (a.amt > b.amt ? -1 : 1))[0];
+      if (hop) wallet = hop.to;
+    }
+    return wallet;
+  };
 
   const byTx = new Map<string, Print>();
-  for (const lg of logs) {
+  for (const lg of swapLogs) {
     const data = lg.data.slice(2);
     const a0 = intWord(data.slice(0, 64));
     const a1 = intWord(data.slice(64, 128));
@@ -62,7 +107,8 @@ export const getTrades = createServerFn({ method: "GET" }).handler(async (): Pro
       gme,
       hash: lg.transactionHash,
       block: Number.parseInt(lg.blockNumber, 16),
+      who: who(lg.transactionHash, side, addr(lg.topics[2] ?? "0x")),
     });
   }
-  return [...byTx.values()].sort((a, b) => b.block - a.block).slice(0, 12);
+  return [...byTx.values()].sort((a, b) => b.block - a.block).slice(0, 400);
 });

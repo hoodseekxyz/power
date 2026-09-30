@@ -19,6 +19,7 @@ export const SITE = {
   longUrl: "https://app.long.xyz/tokens/0xf35561b228CD1208F16Cb9bBc5ee28b872fC1e18",
   poolManager: "0x8366a39cc670b4001a1121b8f6a443a643e40951",
   poolId: "0xbd218d19e63b9be4d096e31139c3ece7f787409175c55e62b54d38d12014824c",
+  poolStartBlock: 76801234,
 } as const;
 
 export const LIVE_TOKEN = SITE.tokenCa.length === 42;

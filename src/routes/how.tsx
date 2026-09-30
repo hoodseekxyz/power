@@ -77,8 +77,7 @@ function How() {
         </section>
 
         <p className="text-sm leading-relaxed text-mute">
-          The square you click is the room. The tape is the {SITE.pair} pool. They move on different clocks. Not
-          affiliated with GameStop.
+          The pixels on the desk are the pool, shared. A buy heats one. A large buy closes the ring in red and takes the seat. A sell cools a pixel and leaves it there. Twelve rings make an epoch. Then a blank square opens.
         </p>
         <Link to="/" className="font-mono text-xs text-power underline">
           back to the live desk
