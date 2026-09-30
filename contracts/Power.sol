@@ -39,6 +39,7 @@ contract Power {
 
     constructor() {
         owner = msg.sender;
+        website = "https://sqpower.xyz";
     }
 
     function ping() external {

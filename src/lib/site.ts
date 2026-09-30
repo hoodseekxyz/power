@@ -15,6 +15,7 @@ export const SITE = {
   sparkWei: "100000000000000",
   sparkEth: "0.0001",
   sideMax: 12,
+  site: "https://sqpower.xyz",
 } as const;
 
 export const LIVE_TOKEN = SITE.tokenCa.length === 42;

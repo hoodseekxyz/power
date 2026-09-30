@@ -84,12 +84,12 @@ export function Footer() {
     <footer className="flex shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-line bg-paper px-3 py-2 font-mono text-micro text-mute sm:px-4">
       <span className="truncate">{SITE.line}</span>
       <span className="flex gap-3">
+        <a className="hover:text-ink" href={SITE.site}>
+          sqpower.xyz
+        </a>
         <a className="hover:text-ink" href="/how">
           how
         </a>
-        <span>
-          {SITE.pair} · {SITE.chainId}
-        </span>
       </span>
     </footer>
   );

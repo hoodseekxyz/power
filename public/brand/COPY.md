@@ -14,7 +14,7 @@ LONG × ANTHROPICx1L
 Not Anthropic.
 
 Location: the square
-Website: (domain when live)
+Website: https://sqpower.xyz
 
 ## X article
 
@@ -38,7 +38,7 @@ The side caps at 12. The step that would make 13 evicts the lightest other seat.
 
 This is not a chart. It is an identity you can sit inside.
 
-$POWER pairs with ANTHROPICx1L on Robinhood Chain. Anthropic did not make this and does not run it.
+$POWER pairs with ANTHROPICx1L on Robinhood Chain. The site is https://sqpower.xyz. Anthropic did not make this and does not run it.
 
 ## Post 1 — the identity (x-post-1.png)
 

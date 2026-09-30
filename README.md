@@ -1,6 +1,6 @@
 # POWER
 
-Ticker `POWER`. Mark `ANTHROPIC²`. Pair: LONG × ANTHROPICx1L. **Not affiliated with Anthropic.**
+Ticker `POWER`. Mark `ANTHROPIC²`. Site: [sqpower.xyz](https://sqpower.xyz). Pair: LONG × ANTHROPICx1L. **Not affiliated with Anthropic.**
 
 The square of the sum is not the sum of the squares. A seat holds a coefficient `a`. The board is `(Σa)²`. Your own power is `a²`. The gap is the cross term `2Σab` — the pool no single wallet owns.
 

@@ -29,7 +29,11 @@ side     ≤  ${SITE.sideMax}`}
           </li>
           <li>Side caps at {SITE.sideMax}. The next sit evicts the lightest other seat.</li>
           <li>
-            Chain {SITE.chainId} {SITE.chainName}. Pair {SITE.pair}. Deploy <span className="text-ink">Power.sol</span>{" "}
+            Chain {SITE.chainId} {SITE.chainName}. Pair {SITE.pair}. Site{" "}
+          <a className="underline" href={SITE.site}>
+            sqpower.xyz
+          </a>
+          . Deploy <span className="text-ink">Power.sol</span>{" "}
             (0.8.24, optimizer 200, Cancun). Paste the CA. Then LONG mints ${SITE.ticker}. Owner{" "}
             <span className="text-power">bindToken</span> once. Never put the square CA in the LONG form.
           </li>

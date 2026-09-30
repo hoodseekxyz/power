@@ -14,7 +14,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "The square of the sum is not the sum of the squares. $POWER · ANTHROPIC² · ANTHROPICx1L. Not affiliated with Anthropic.",
+          "The square of the sum is not the sum of the squares. $POWER · ANTHROPIC² · sqpower.xyz. Not affiliated with Anthropic.",
       },
       { name: "theme-color", content: "#f3efe6" },
     ],
