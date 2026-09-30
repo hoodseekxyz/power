@@ -1,9 +1,18 @@
-import { ownerAt, SIDE_MAX, type Seat } from "@/lib/power";
+import { ownerAt, SIDE_MAX, sumA, type Seat } from "@/lib/power";
 import { cn } from "@/lib/cn";
 
 const STEPS = Array.from({ length: SIDE_MAX * SIDE_MAX }, (_, i) => i);
 
-export function SquareBoard({ seats, onPing }: { seats: Seat[]; onPing: () => void }) {
+export function SquareBoard({
+  seats,
+  onPing,
+  flash,
+}: {
+  seats: Seat[];
+  onPing: () => void;
+  flash: number;
+}) {
+  const hot = sumA(seats) - 1;
   return (
     <button
       type="button"
@@ -18,15 +27,18 @@ export function SquareBoard({ seats, onPing }: { seats: Seat[]; onPing: () => vo
         {STEPS.map((i) => {
           const row = Math.floor(i / SIDE_MAX);
           const col = i % SIDE_MAX;
+          const step = Math.max(row, col);
           const owner = ownerAt(seats, row, col);
+          const popped = flash > 0 && owner && step === hot;
           return (
             <span
-              key={i}
+              key={popped ? `${i}-${flash}` : i}
               className={cn(
                 "block min-h-0 min-w-0",
                 !owner && "bg-surface",
                 owner?.you && "bg-power",
                 owner && !owner.you && "bg-ink",
+                popped && "cell-pop",
               )}
               style={owner && !owner.you ? { opacity: 0.28 + (owner.a % 5) * 0.12 } : undefined}
             />

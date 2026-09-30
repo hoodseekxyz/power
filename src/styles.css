@@ -49,3 +49,24 @@
     color: var(--color-mute);
   }
 }
+
+@keyframes cell-pop {
+  from {
+    transform: scale(0.2);
+    opacity: 0.2;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.cell-pop {
+  animation: cell-pop 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell-pop {
+    animation: none;
+  }
+}

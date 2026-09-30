@@ -1,5 +1,6 @@
 import { Footer, Header } from "@/components/chrome";
 import { PowerSide } from "@/components/power-side";
+import { SitEvent } from "@/components/sit-event";
 import { SquareBoard } from "@/components/square-board";
 import { usePower } from "@/store/power";
 import { createFileRoute } from "@tanstack/react-router";
@@ -13,6 +14,7 @@ function Home() {
   const spark = usePower((s) => s.spark);
   const hydrate = usePower((s) => s.hydrate);
   const sending = usePower((s) => s.sending);
+  const flash = usePower((s) => s.flash);
 
   useEffect(() => {
     hydrate();
@@ -34,9 +36,10 @@ function Home() {
   return (
     <div className="flex h-dvh flex-col overflow-hidden bg-paper text-ink">
       <Header />
+      <SitEvent />
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
         <main className="flex shrink-0 items-center justify-center p-4 sm:p-8 lg:min-h-0 lg:flex-1">
-          <SquareBoard seats={seats} onPing={ping} />
+          <SquareBoard seats={seats} onPing={ping} flash={flash} />
         </main>
         <PowerSide />
       </div>

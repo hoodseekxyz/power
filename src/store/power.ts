@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { cross, SIDE_MAX, squareOfSum, sumA, sumSq, type Seat } from "@/lib/power";
 import { LIVE_SQUARE, SITE } from "@/lib/site";
+import { quipFor } from "@/lib/quips";
 import { SEL, connect as walletConnect, sendCall, shortTx } from "@/lib/wallet";
 
 const KEY = "power-square";
@@ -13,6 +14,8 @@ type Desk = {
   seats: Seat[];
   err: string | null;
   last: string | null;
+  quip: string;
+  flash: number;
   sending: null | "ping" | "spark";
   hydrate: () => void;
   connect: (addr: string) => void;
@@ -56,6 +59,8 @@ export const usePower = create<Desk>((set, get) => ({
   seats: ghosts(),
   err: null,
   last: null,
+  quip: "Tap the square. Take a seat. The pool grows and still isn't yours.",
+  flash: 0,
   sending: null,
   hydrate: () => {
     try {
@@ -85,18 +90,28 @@ function add(
   kind: "ping" | "spark",
 ) {
   const state = get();
-  const grown = evict(state.seats, da);
+  const before = state.seats;
+  const grown = evict(before, da);
   if (!grown) {
-    set({ err: "The square is full. Side caps at 12." });
+    set({ err: "The square is full. You are the only mass left.", quip: "Nowhere to throw anyone. The square is just you." });
     return;
   }
+  const kicked = before.filter((s) => !grown.some((g) => g.id === s.id)).map((s) => s.label);
   let you = grown.find((s) => s.you);
   if (!you) {
     you = { id: "you", label: state.you, a: 0, you: true };
     grown.push(you);
   }
   you.a += da;
-  set({ seats: grown, err: null, last: kind === "spark" ? "spark +3" : "ping +1" });
+  const side = sumA(grown);
+  const quip = quipFor({ kicked, side, cross: cross(grown), you: state.you, da });
+  set({
+    seats: grown,
+    err: null,
+    quip,
+    flash: state.flash + 1,
+    last: kind === "spark" ? "spark +3" : "ping +1",
+  });
   try {
     localStorage.setItem(KEY, JSON.stringify({ you: state.you, seats: grown }));
   } catch {
