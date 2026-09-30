@@ -53,7 +53,7 @@ export const getTrades = createServerFn({ method: "GET" }).handler(async (): Pro
     const a1 = intWord(data.slice(64, 128));
     const sq = fromWei(a1);
     const gme = fromWei(a0);
-    const side: Print["side"] = a1 < 0n ? "buy" : "sell";
+    const side: Print["side"] = a1 > 0n ? "buy" : "sell";
     const prev = byTx.get(lg.transactionHash);
     if (prev && prev.sq >= sq) continue;
     byTx.set(lg.transactionHash, {
