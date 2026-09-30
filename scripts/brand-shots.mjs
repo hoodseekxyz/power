@@ -41,9 +41,12 @@ const pages = {
     w: 800,
     h: 800,
     html: `<style>${CSS}
-      .w{width:800px;height:800px;display:flex;align-items:center;justify-content:center;background:#f3efe6}
-      svg{width:520px;height:520px}
-    </style><div class="w">${square(520)}</div>`,
+      .w{width:800px;height:800px;background:#1a1a1a}
+      svg{width:800px;height:800px;display:block}
+    </style><div class="w"><svg viewBox="0 0 40 40" width="800" height="800">
+      <rect width="40" height="40" fill="#1a1a1a"/>
+      <text x="30" y="15" text-anchor="end" fill="#f3efe6" font-family="Newsreader, Georgia, serif" font-size="14">2</text>
+    </svg></div>`,
   },
   "x-banner": {
     w: 1500,
