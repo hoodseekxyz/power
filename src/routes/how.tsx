@@ -39,7 +39,7 @@ side     ≤  ${SITE.sideMax}`}
           </li>
         </ul>
         <p className="mt-8 text-sm leading-relaxed text-mute">
-          Not affiliated with Anthropic. Token CA stays empty until LONG mints ${SITE.ticker}.
+          Not affiliated with Anthropic or GameStop. Token CA stays empty until LONG mints ${SITE.ticker}. Pair {SITE.pair} is not the token. Do not pass it to bindToken.
         </p>
         <Link to="/" className="mt-8 inline-block font-mono text-xs text-power underline">
           back to the square

@@ -31,7 +31,7 @@ export function Header() {
             {SITE.name}
           </div>
           <div className="mt-0.5 font-mono text-micro tracking-wide text-mute">
-            {SITE.mark} · ${SITE.ticker}
+            {SITE.mark} · ${SITE.ticker} · {SITE.pair}
           </div>
         </div>
       </a>
@@ -87,6 +87,7 @@ export function Footer() {
         <a className="hover:text-ink" href={SITE.site}>
           sqpower.xyz
         </a>
+        <span className="text-ink">{SITE.pair}</span>
         <a className="hover:text-ink" href="/how">
           how
         </a>

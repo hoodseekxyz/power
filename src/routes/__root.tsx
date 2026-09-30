@@ -3,7 +3,7 @@ import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "POWER";
+const APP_NAME = "SQPOWER";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -14,7 +14,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "The square of the sum is not the sum of the squares. $POWER · ANTHROPIC² · sqpower.xyz. Not affiliated with Anthropic.",
+          "The square of the sum is not the sum of the squares. $SQPOWER · LONG × GME · sqpower.xyz. Not affiliated with Anthropic or GameStop.",
       },
       { name: "theme-color", content: "#f3efe6" },
     ],

@@ -47,7 +47,7 @@ const pages = {
       <h1 class="word" style="margin-top:12px;font-size:84px">POWER</h1>
       <div class="sub">(Σa)² is not Σa²</div>
       <div class="k hot">the cross term is the pool</div>
-      <div class="pair">$POWER · LONG × ANTHROPICx1L · sqpower.xyz</div>
+      <div class="pair">$SQPOWER · LONG × GME · sqpower.xyz</div>
     </div></div>`,
   },
   "x-cover": {
@@ -79,7 +79,7 @@ const pages = {
       <div class="kicker">the identity</div>
       <h2 class="display" style="margin-top:14px">(Σa)² ≠ Σa²</h2>
       <p>Add the squares and you miss the pool.</p>
-      <div class="kicker" style="margin-top:28px">$POWER · sqpower.xyz</div>
+      <div class="kicker" style="margin-top:28px">$SQPOWER · sqpower.xyz</div>
     </div></div>`,
   },
   "x-post-2": {
@@ -121,7 +121,7 @@ const pages = {
           <li>the next step evicts the lightest other seat</li>
         </ul>
       </div>
-      <div class="kicker">$POWER · sqpower.xyz</div>
+      <div class="kicker">$SQPOWER · sqpower.xyz</div>
     </div></div>`,
   },
 };

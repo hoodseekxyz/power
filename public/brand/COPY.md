@@ -1,16 +1,16 @@
 # POWER — X pack
 
 Mark: ANTHROPIC²
-Ticker: $POWER
-Pair: LONG × ANTHROPICx1L
+Ticker: $SQPOWER
+Pair: LONG × GME
 Not affiliated with Anthropic.
 
 ## X bio
 
 (Σa)² is not Σa². The cross term is the pool.
 
-$POWER · ANTHROPIC²
-LONG × ANTHROPICx1L
+$SQPOWER · ANTHROPIC²
+LONG × GME
 Not Anthropic.
 
 Location: the square
@@ -38,7 +38,7 @@ The side caps at 12. The step that would make 13 evicts the lightest other seat.
 
 This is not a chart. It is an identity you can sit inside.
 
-$POWER pairs with ANTHROPICx1L on Robinhood Chain. The site is https://sqpower.xyz. Anthropic did not make this and does not run it.
+$SQPOWER pairs with GME on Robinhood Chain. The site is https://sqpower.xyz. Anthropic did not make this and does not run it. Not affiliated with GameStop.
 
 ## Post 1 — the identity (x-post-1.png)
 
@@ -46,8 +46,8 @@ $POWER pairs with ANTHROPICx1L on Robinhood Chain. The site is https://sqpower.x
 
 Add the squares and you miss the pool.
 
-$POWER · ANTHROPIC²
-LONG × ANTHROPICx1L
+$SQPOWER · ANTHROPIC²
+LONG × GME
 Not Anthropic.
 
 ## Post 2 — the pool (x-post-2.png)
@@ -58,7 +58,7 @@ Not Anthropic.
 
 That 26 is 2Σab. That is the pool.
 
-$POWER
+$SQPOWER
 
 ## Post 3 — the rule (x-post-3.png)
 
@@ -69,5 +69,5 @@ spark adds 3.
 the next step evicts the lightest other seat.
 
 Sit in the square.
-$POWER · ANTHROPIC²
+$SQPOWER · ANTHROPIC²
 Not Anthropic.
